@@ -69,7 +69,7 @@ export const Classes: React.FC = () => {
         </div>
         <button 
           onClick={() => handleOpenModal()}
-          className="bg-[#001D4A] hover:bg-[#00215E] text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 w-fit"
+          className="bg-[#001D4A] hover:bg-[#00215E] active:scale-95 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 w-fit focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
         >
           <Plus size={18} />
           Ajouter une classe
@@ -84,60 +84,77 @@ export const Classes: React.FC = () => {
             placeholder="Rechercher par niveau ou mention..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-bg-light border border-border rounded-xl py-2 pl-10 pr-4 outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 text-xs"
+            className="w-full bg-bg-light border border-border rounded-xl py-2 pl-10 pr-4 outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/5 text-xs focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map((c, i) => (
-          <motion.div 
-            key={c.id}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.05 }}
-            className="bg-white rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-all border-l-4 border-l-primary flex flex-col"
+      {filtered.length === 0 ? (
+        <div className="p-12 bg-white rounded-2xl border border-border text-center flex flex-col items-center">
+          <div className="w-16 h-16 bg-bg-light rounded-full flex items-center justify-center mx-auto mb-4 text-text-muted">
+            <Search size={24} />
+          </div>
+          <h3 className="text-lg font-bold text-text-dark mb-1">Aucune classe trouvée</h3>
+          <p className="text-text-muted text-sm max-w-sm mb-6">Il n'y a aucune classe correspondant à votre recherche. Modifiez vos critères ou ajoutez une nouvelle classe.</p>
+          <button 
+            onClick={() => { setSearchTerm(''); handleOpenModal(); }}
+            className="bg-[#001D4A] hover:bg-[#00215E] active:scale-95 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className="p-2.5 bg-primary/5 text-primary rounded-xl">
-                <GraduationCap size={20} />
+            <Plus size={18} />
+            Ajouter une classe
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map((c, i) => (
+            <motion.div 
+              key={c.id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.05 }}
+              className="bg-white rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-all border-l-4 border-l-primary flex flex-col"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-2.5 bg-primary/5 text-primary rounded-xl">
+                  <GraduationCap size={20} />
+                </div>
+                <div className="flex gap-1">
+                  <button 
+                    onClick={() => handleOpenModal(c)}
+                    className="p-1.5 hover:bg-bg-light rounded-lg text-text-muted hover:text-primary transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+                  >
+                    <Edit2 size={14} />
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(c.id)}
+                    className="p-1.5 hover:bg-bg-light rounded-lg text-text-muted hover:text-error transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-error focus-visible:outline-none"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               </div>
-              <div className="flex gap-1">
-                <button 
-                  onClick={() => handleOpenModal(c)}
-                  className="p-1.5 hover:bg-bg-light rounded-lg text-text-muted hover:text-primary transition-all"
-                >
-                  <Edit2 size={14} />
+              
+              <div className="flex-grow">
+                <h3 className="text-sm font-bold text-text-dark leading-tight mb-1">{c.mention}</h3>
+                <div className="flex items-center gap-2">
+                  <span className="px-1.5 py-0.5 bg-[#001D4A]/5 text-[#001D4A] rounded text-[9px] font-bold uppercase tracking-wider">{c.name}</span>
+                  <span className="text-[10px] font-medium text-text-muted">{c.level}</span>
+                </div>
+              </div>
+              
+              <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-bold text-text-muted uppercase tracking-wider">Effectif Estimé</span>
+                  <span className="text-xs font-bold text-text-dark">45 Étudiants</span>
+                </div>
+                <button className="bg-bg-light hover:bg-border/30 p-2 rounded-lg transition-colors active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none">
+                  <Plus size={14} className="text-primary" />
                 </button>
-                <button 
-                  onClick={() => handleDelete(c.id)}
-                  className="p-1.5 hover:bg-bg-light rounded-lg text-text-muted hover:text-error transition-all"
-                >
-                  <Trash2 size={14} />
-                </button>
               </div>
-            </div>
-            
-            <div className="flex-grow">
-              <h3 className="text-sm font-bold text-text-dark leading-tight mb-1">{c.mention}</h3>
-              <div className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 bg-[#001D4A]/5 text-[#001D4A] rounded text-[9px] font-bold uppercase tracking-wider">{c.name}</span>
-                <span className="text-[10px] font-medium text-text-muted">{c.level}</span>
-              </div>
-            </div>
-            
-            <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
-              <div className="flex flex-col">
-                <span className="text-[9px] font-bold text-text-muted uppercase tracking-wider">Effectif Estimé</span>
-                <span className="text-xs font-bold text-text-dark">45 Étudiants</span>
-              </div>
-              <button className="bg-bg-light hover:bg-border/30 p-2 rounded-lg transition-colors">
-                <Plus size={14} className="text-primary" />
-              </button>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* Modal */}
       <AnimatePresence>
@@ -160,7 +177,7 @@ export const Classes: React.FC = () => {
                 <h3 className="text-xl font-display font-bold text-text-dark">
                   {editingClass ? 'Modifier la classe' : 'Nouvelle classe'}
                 </h3>
-                <button onClick={() => setShowModal(false)} className="p-1.5 hover:bg-bg-light rounded-lg transition-colors text-text-muted">
+                <button onClick={() => setShowModal(false)} className="p-1.5 hover:bg-bg-light rounded-lg transition-colors text-text-muted active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none">
                   <X size={20} />
                 </button>
               </div>
@@ -207,13 +224,13 @@ export const Classes: React.FC = () => {
                   <button 
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="flex-1 px-4 py-2.5 rounded-xl border border-border text-text-dark text-xs font-bold hover:bg-bg-light transition-all"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-border text-text-dark text-xs font-bold hover:bg-bg-light transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
                   >
                     Annuler
                   </button>
                   <button 
                     type="submit"
-                    className="flex-1 px-4 py-2.5 bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/10 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2.5 bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/10 transition-all flex items-center justify-center gap-2 active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
                   >
                     <Check size={16} />
                     Enregistrer

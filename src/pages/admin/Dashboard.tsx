@@ -89,7 +89,7 @@ export const AdminDashboard: React.FC = () => {
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-display font-bold text-text-dark">Planning du jour</h2>
-            <button className="text-primary text-xs font-bold flex items-center gap-1 hover:underline">
+            <button className="text-primary text-xs font-bold flex items-center gap-1 hover:underline active:scale-95 transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">
               Voir tout
               <ArrowRight size={14} />
             </button>
@@ -97,39 +97,49 @@ export const AdminDashboard: React.FC = () => {
 
           <div className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
             <div className="divide-y divide-border">
-              {filteredSchedules.map((sch) => (
-                <div key={sch.id} className="p-4 flex items-center gap-4 hover:bg-bg-light transition-colors group">
-                  <div className="flex flex-col items-center justify-center p-2 border-r border-border min-w-[100px]">
-                    <span className="text-base font-bold text-text-dark">{sch.startTime}</span>
-                    <span className="text-[10px] font-medium text-text-muted">{sch.endTime}</span>
+              {filteredSchedules.length === 0 ? (
+                <div className="p-8 text-center flex flex-col items-center">
+                  <div className="w-12 h-12 bg-bg-light rounded-full flex items-center justify-center mx-auto mb-3 text-text-muted">
+                    <Calendar size={20} />
                   </div>
-                  <div className="flex-grow">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 bg-primary/10 text-primary rounded-md uppercase tracking-wider">
-                        {classes.find(c => c.id === sch.classId)?.name}
-                      </span>
-                      <h4 className="text-sm font-bold text-text-dark">
-                        {subjects.find(s => s.id === sch.subjectId)?.name}
-                      </h4>
-                    </div>
-                    <div className="flex flex-wrap gap-3 text-xs text-text-muted">
-                      <div className="flex items-center gap-1">
-                        <MapPin size={12} className="text-accent" />
-                        {rooms.find(r => r.id === sch.roomId)?.name}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users size={12} className="text-accent" />
-                        {teachers.find(t => t.id === sch.teacherId)?.name}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="p-1.5 hover:bg-white rounded-lg border border-border text-text-muted hover:text-primary transition-all">
-                      <Settings size={16} />
-                    </button>
-                  </div>
+                  <h3 className="text-sm font-bold text-text-dark mb-1">Aucun cours aujourd'hui</h3>
+                  <p className="text-[11px] text-text-muted">Votre planning est libre pour la journée.</p>
                 </div>
-              ))}
+              ) : (
+                filteredSchedules.map((sch) => (
+                  <div key={sch.id} className="p-4 flex items-center gap-4 hover:bg-bg-light transition-colors group">
+                    <div className="flex flex-col items-center justify-center p-2 border-r border-border min-w-[100px]">
+                      <span className="text-base font-bold text-text-dark">{sch.startTime}</span>
+                      <span className="text-[10px] font-medium text-text-muted">{sch.endTime}</span>
+                    </div>
+                    <div className="flex-grow">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 bg-primary/10 text-primary rounded-md uppercase tracking-wider">
+                          {classes.find(c => c.id === sch.classId)?.name}
+                        </span>
+                        <h4 className="text-sm font-bold text-text-dark">
+                          {subjects.find(s => s.id === sch.subjectId)?.name}
+                        </h4>
+                      </div>
+                      <div className="flex flex-wrap gap-3 text-xs text-text-muted">
+                        <div className="flex items-center gap-1">
+                          <MapPin size={12} className="text-accent" />
+                          {rooms.find(r => r.id === sch.roomId)?.name}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Users size={12} className="text-accent" />
+                          {teachers.find(t => t.id === sch.teacherId)?.name}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button className="p-1.5 hover:bg-white rounded-lg border border-border text-text-muted hover:text-primary transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none">
+                        <Settings size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -138,7 +148,7 @@ export const AdminDashboard: React.FC = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-display font-bold text-text-dark">Notifications</h2>
-            <button className="text-primary text-xs font-bold hover:underline">
+            <button className="text-primary text-xs font-bold hover:underline active:scale-95 transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">
               Tout lire
             </button>
           </div>
@@ -166,7 +176,7 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               ))}
             </div>
-            <button className="p-3 text-center text-xs font-bold text-primary hover:bg-bg-light transition-colors border-t border-border">
+            <button className="p-3 text-center text-xs font-bold text-primary hover:bg-bg-light transition-colors border-t border-border active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary">
               Voir tout l'historique
             </button>
           </div>

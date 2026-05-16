@@ -48,12 +48,14 @@ const TIME_SLOTS = [
 ];
 
 const timeToMinutes = (time: string) => {
+  if (!time) return 0;
   const [h, m] = time.split(':').map(Number);
   return h * 60 + m;
 };
 
 const checkConflict = (s1: Partial<Schedule>, s2: Schedule) => {
   if (!s1.startTime || !s1.endTime || s1.day === undefined) return false;
+  if (!s2.startTime || !s2.endTime || s2.day === undefined) return false;
   if (s1.id === s2.id) return false;
   if (s1.day !== s2.day) return false;
 
@@ -376,7 +378,9 @@ export const Schedules: React.FC = () => {
     if (over && over.id.toString().startsWith('cell-')) {
       const scheduleId = active.id as string;
       const { day, timeIndex } = over.data.current as { day: number, timeIndex: number };
-      const newStartTime = TIME_SLOTS[timeIndex].split(' - ')[0];
+      const timeSlot = TIME_SLOTS[timeIndex];
+      if (!timeSlot) return;
+      const newStartTime = timeSlot.split(' - ')[0];
       
       const schedule = schedules.find(s => s.id === scheduleId);
       if (!schedule) return;
@@ -447,7 +451,7 @@ export const Schedules: React.FC = () => {
           {hasNoPending && !showOfficialView && (
             <button 
               onClick={() => setShowOfficialView(true)}
-              className="bg-[#001D4A] hover:bg-[#00215E] text-white px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2"
+              className="bg-[#001D4A] hover:bg-[#00215E] text-white px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 active:scale-95 focus-visible:ring-2 focus-visible:ring-[#001D4A] focus-visible:outline-none"
             >
               <CheckCircle2 size={16} />
               Vue officielle
@@ -456,7 +460,7 @@ export const Schedules: React.FC = () => {
           {showOfficialView && (
             <button 
               onClick={() => setShowOfficialView(false)}
-              className="bg-primary hover:bg-primary-hover text-white px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-primary/10 flex items-center gap-2"
+              className="bg-primary hover:bg-primary-hover text-white px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-primary/10 flex items-center gap-2 active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
             >
               <CalendarIcon size={16} />
               Vue planning
@@ -465,7 +469,7 @@ export const Schedules: React.FC = () => {
           <button 
             onClick={handleDownloadPDF}
             disabled={isDownloading || !showOfficialView}
-            className="bg-bg-light border border-border text-text-dark px-3 py-2 rounded-xl text-xs font-bold transition-all hover:bg-border/50 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-bg-light border border-border text-text-dark px-3 py-2 rounded-xl text-xs font-bold transition-all hover:bg-border/50 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
           >
             <Download size={16} />
             {isDownloading ? 'Génération...' : 'PDF'}
@@ -483,7 +487,7 @@ export const Schedules: React.FC = () => {
                 });
                 setShowAddModal(true);
               }}
-              className="bg-[#001D4A] hover:bg-[#00215E] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2"
+              className="bg-[#001D4A] hover:bg-[#00215E] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 active:scale-95 focus-visible:ring-2 focus-visible:ring-[#001D4A] focus-visible:outline-none"
             >
               <Plus size={18} />
               Nouvelle
@@ -703,7 +707,7 @@ export const Schedules: React.FC = () => {
                 <h3 className="text-xl font-display font-bold text-text-dark">
                   {editingSchedule ? 'Modifier l\'affectation' : 'Nouvelle affectation'}
                 </h3>
-                <button onClick={() => setShowAddModal(false)} className="p-1.5 hover:bg-bg-light rounded-lg transition-colors">
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 hover:bg-bg-light rounded-lg transition-colors active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none">
                   <X size={20} className="text-text-muted" />
                 </button>
               </div>
@@ -802,13 +806,13 @@ export const Schedules: React.FC = () => {
                 <div className="flex-grow" />
                 <button 
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2.5 rounded-xl border border-border text-text-dark text-xs font-bold hover:bg-bg-light transition-all"
+                  className="px-4 py-2.5 rounded-xl border border-border text-text-dark text-xs font-bold hover:bg-bg-light transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
                 >
                   Annuler
                 </button>
                 <button 
                   onClick={saveAssignment}
-                  className="px-6 py-2.5 rounded-xl bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/10 transition-all flex items-center justify-center gap-2"
+                  className="px-6 py-2.5 rounded-xl bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/10 transition-all flex items-center justify-center gap-2 active:scale-95 focus-visible:ring-2 focus-visible:ring-[#001D4A] focus-visible:outline-none"
                 >
                   <Check size={16} />
                   Enregistrer

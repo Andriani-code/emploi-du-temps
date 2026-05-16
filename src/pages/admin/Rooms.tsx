@@ -73,7 +73,7 @@ export const Rooms: React.FC = () => {
         </div>
         <button 
           onClick={() => handleOpenModal()}
-          className="bg-[#001D4A] hover:bg-[#00215E] text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 w-fit"
+          className="bg-[#001D4A] hover:bg-[#00215E] active:scale-95 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 w-fit focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
         >
           <Plus size={18} />
           Ajouter une salle
@@ -89,7 +89,7 @@ export const Rooms: React.FC = () => {
             placeholder="Rechercher une salle..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-bg-light border border-border rounded-xl py-2 pl-10 pr-4 outline-none transition-all focus:border-[#001D4A] focus:ring-4 focus:ring-[#001D4A]/5 text-xs"
+            className="w-full bg-bg-light border border-border rounded-xl py-2 pl-10 pr-4 outline-none transition-all focus:border-[#001D4A] focus:ring-4 focus:ring-[#001D4A]/5 text-xs focus-visible:ring-2 focus-visible:ring-[#001D4A] focus-visible:outline-none"
           />
         </div>
         <div className="flex gap-2">
@@ -151,13 +151,13 @@ export const Rooms: React.FC = () => {
                     <div className="flex items-center justify-end gap-1.5">
                       <button 
                         onClick={() => handleOpenModal(room)}
-                        className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-border text-text-muted hover:text-[#001D4A] transition-all"
+                        className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-border text-text-muted hover:text-[#001D4A] transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-[#001D4A] focus-visible:outline-none"
                       >
                         <Edit2 size={14} />
                       </button>
                       <button 
                         onClick={() => handleDelete(room.id)}
-                        className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-border text-text-muted hover:text-error transition-all"
+                        className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-border text-text-muted hover:text-error transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-error focus-visible:outline-none"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -169,12 +169,19 @@ export const Rooms: React.FC = () => {
           </table>
         </div>
         {filteredRooms.length === 0 && (
-          <div className="p-12 text-center">
+          <div className="p-12 text-center flex flex-col items-center">
             <div className="w-16 h-16 bg-bg-light rounded-full flex items-center justify-center mx-auto mb-4 text-text-muted">
               <Search size={24} />
             </div>
             <h3 className="text-lg font-bold text-text-dark mb-1">Aucune salle trouvée</h3>
-            <p className="text-text-muted text-sm">Essayez de modifier vos critères de recherche.</p>
+            <p className="text-text-muted text-sm max-w-sm mb-6">Il n'y a aucune salle correspondant à votre recherche. Modifiez vos critères ou ajoutez une nouvelle salle.</p>
+            <button 
+              onClick={() => { setSearchTerm(''); handleOpenModal(); }}
+              className="bg-[#001D4A] hover:bg-[#00215E] active:scale-95 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+            >
+              <Plus size={18} />
+              Ajouter une salle
+            </button>
           </div>
         )}
       </div>
@@ -199,7 +206,7 @@ export const Rooms: React.FC = () => {
                 <h3 className="text-xl font-display font-bold text-text-dark">
                   {editingRoom ? 'Modifier la salle' : 'Nouvelle salle'}
                 </h3>
-                <button onClick={() => setShowModal(false)} className="p-1.5 hover:bg-bg-light rounded-lg transition-colors text-text-muted">
+                <button onClick={() => setShowModal(false)} className="p-1.5 hover:bg-bg-light rounded-lg transition-colors text-text-muted active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none">
                   <X size={20} />
                 </button>
               </div>
@@ -246,13 +253,13 @@ export const Rooms: React.FC = () => {
                   <button 
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="flex-1 px-4 py-2.5 rounded-xl border border-border text-text-dark text-xs font-bold hover:bg-bg-light transition-all"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-border text-text-dark text-xs font-bold hover:bg-bg-light transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
                   >
                     Annuler
                   </button>
                   <button 
                     type="submit"
-                    className="flex-1 px-4 py-2.5 bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/10 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2.5 bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/10 transition-all flex items-center justify-center gap-2 active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
                   >
                     <CheckCircle2 size={16} />
                     Enregistrer
