@@ -20,7 +20,7 @@ const CourseBlock = React.memo(({ subject, teacher, room, color }: any) => {
       case 'blue': return 'bg-blue-50 border-blue-200 text-blue-700';
       case 'purple': return 'bg-purple-50 border-purple-200 text-purple-700';
       case 'orange': return 'bg-orange-50 border-orange-200 text-orange-700';
-      case 'green': return 'bg-emerald-50 border-emerald-200 text-emerald-700';
+      case 'indigo': return 'bg-indigo-50 border-indigo-200 text-indigo-700';
       case 'rose': return 'bg-rose-50 border-rose-200 text-rose-700';
       default: return 'bg-slate-50 border-slate-200 text-slate-700';
     }
@@ -67,13 +67,13 @@ export const MOCK_SCHEDULES: Record<number, any[]> = {
     { id: 202, dayIdx: 0, slotIdx: 2, subject: "Programmation C++", teacher: "Randrianarivo D.", room: "Info 102", color: "purple" },
     { id: 203, dayIdx: 1, slotIdx: 0, subject: "Base de données", teacher: "Ranivo M.", room: "Salle 101", color: "rose" },
     { id: 204, dayIdx: 2, slotIdx: 0, subject: "Système d'Exploitation", teacher: "Rakotonavalona", room: "Salle 201", color: "purple" },
-    { id: 205, dayIdx: 2, slotIdx: 3, subject: "Réseaux I", teacher: "Andriamihaja H.", room: "Salle 102", color: "green" },
+    { id: 205, dayIdx: 2, slotIdx: 3, subject: "Réseaux I", teacher: "Andriamihaja H.", room: "Salle 102", color: "indigo" },
   ],
   // L3 Informatique DAII
   3: [
     { id: 301, dayIdx: 0, slotIdx: 1, subject: "Génie Logiciel", teacher: "Andry L.", room: "Info 202", color: "blue" },
     { id: 302, dayIdx: 1, slotIdx: 2, subject: "Web Avancé", teacher: "Faly T.", room: "Labo 3", color: "blue" },
-    { id: 303, dayIdx: 3, slotIdx: 3, subject: "Sécurité Info", teacher: "Jean P.", room: "Salle 5", color: "green" },
+    { id: 303, dayIdx: 3, slotIdx: 3, subject: "Sécurité Info", teacher: "Jean P.", room: "Salle 5", color: "indigo" },
     { id: 304, dayIdx: 4, slotIdx: 0, subject: "Projet Fin d'Étude", teacher: "Equipe DAII", room: "Foyer", color: "purple" },
   ],
   // L1 Management AES
@@ -100,7 +100,7 @@ export const MOCK_SCHEDULES: Record<number, any[]> = {
   ],
   // L2 IC
   8: [
-    { id: 801, dayIdx: 1, slotIdx: 0, subject: "Journalisme", teacher: "Alain G.", room: "Salle 11", color: "green" },
+    { id: 801, dayIdx: 1, slotIdx: 0, subject: "Journalisme", teacher: "Alain G.", room: "Salle 11", color: "indigo" },
     { id: 802, dayIdx: 3, slotIdx: 1, subject: "Audiovisuel", teacher: "Nivo M.", room: "Studio", color: "rose" },
   ],
   // L3 IC
@@ -116,7 +116,7 @@ export const MOCK_SCHEDULES: Record<number, any[]> = {
   // M2 Management MD
   11: [
     { id: 1101, dayIdx: 1, slotIdx: 1, subject: "Innovation", teacher: "Dr Laza", room: "Amphi Master", color: "purple" },
-    { id: 1102, dayIdx: 4, slotIdx: 2, subject: "Thèse Professionnelle", teacher: "Directeur EMIT", room: "Bureau", color: "green" },
+    { id: 1102, dayIdx: 4, slotIdx: 2, subject: "Thèse Professionnelle", teacher: "Directeur EMIT", room: "Bureau", color: "indigo" },
   ],
 };
 
@@ -167,12 +167,12 @@ export const TimetableDetail = () => {
               --color-orange-500: #f97316 !important;
               --color-orange-600: #ea580c !important;
               --color-orange-700: #c2410c !important;
-              --color-emerald-50: #ecfdf5 !important;
-              --color-emerald-100: #d1fae5 !important;
-              --color-emerald-200: #a7f3d0 !important;
-              --color-emerald-500: #10b981 !important;
-              --color-emerald-600: #059669 !important;
-              --color-emerald-700: #047857 !important;
+              --color-indigo-50: #eef2ff !important;
+              --color-indigo-100: #e0e7ff !important;
+              --color-indigo-200: #c7d2fe !important;
+              --color-indigo-500: #6366f1 !important;
+              --color-indigo-600: #4f46e5 !important;
+              --color-indigo-700: #4338ca !important;
               --color-purple-50: #faf5ff !important;
               --color-purple-100: #f3e8ff !important;
               --color-purple-200: #e9d5ff !important;
@@ -218,12 +218,12 @@ export const TimetableDetail = () => {
             .border-orange-200 { border-color: #fed7aa !important; }
             .border-orange-500 { border-color: #f97316 !important; }
 
-            .bg-emerald-50 { background-color: #ecfdf5 !important; }
-            .bg-emerald-100 { background-color: #d1fae5 !important; }
-            .bg-emerald-200 { background-color: #a7f3d0 !important; }
-            .text-emerald-700 { color: #047857 !important; }
-            .border-emerald-200 { border-color: #a7f3d0 !important; }
-            .border-emerald-500 { border-color: #10b981 !important; }
+            .bg-indigo-50 { background-color: #eef2ff !important; }
+            .bg-indigo-100 { background-color: #e0e7ff !important; }
+            .bg-indigo-200 { background-color: #c7d2fe !important; }
+            .text-indigo-700 { color: #4338ca !important; }
+            .border-indigo-200 { border-color: #c7d2fe !important; }
+            .border-indigo-500 { border-color: #6366f1 !important; }
 
             .bg-rose-50 { background-color: #fff1f2 !important; }
             .bg-rose-100 { background-color: #ffe4e6 !important; }
@@ -392,7 +392,7 @@ export const TimetableDetail = () => {
                 { label: 'Informatique', color: 'bg-blue-200' },
                 { label: 'Gestion', color: 'bg-rose-200' },
                 { label: 'Anglais', color: 'bg-orange-200' },
-                { label: 'Réseaux', color: 'bg-emerald-200' },
+                { label: 'Réseaux', color: 'bg-indigo-200' },
                 { label: 'Projets', color: 'bg-purple-200' },
               ].map(item => (
                 <div key={item.label} className="flex items-center gap-2">
@@ -409,7 +409,7 @@ export const TimetableDetail = () => {
             { label: 'Informatique', color: 'bg-blue-200' },
             { label: 'Gestion', color: 'bg-rose-200' },
             { label: 'Anglais', color: 'bg-orange-200' },
-            { label: 'Réseaux', color: 'bg-emerald-200' },
+            { label: 'Réseaux', color: 'bg-indigo-200' },
             { label: 'Projets', color: 'bg-purple-200' },
           ].map(item => (
             <div key={item.label} className="flex items-center gap-2">

@@ -125,7 +125,7 @@ export const Subjects: React.FC = () => {
             </div>
             <div className="mt-6 pt-6 border-t border-border flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
                 <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Matière Actif</span>
               </div>
               <span className="text-[10px] font-bold text-text-dark bg-bg-light px-2 py-1 rounded">UE</span>

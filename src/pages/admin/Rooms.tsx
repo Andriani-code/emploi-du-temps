@@ -142,7 +142,7 @@ export const Rooms: React.FC = () => {
                     <span className={`text-[10px] font-bold px-2 py-1 rounded-lg uppercase tracking-wider ${
                       room.type === 'Amphi' ? 'bg-purple-50 text-purple-600' :
                       room.type === 'TP' ? 'bg-blue-50 text-blue-600' :
-                      'bg-emerald-50 text-emerald-600'
+                      'bg-orange-50 text-orange-600'
                     }`}>
                       {room.type}
                     </span>

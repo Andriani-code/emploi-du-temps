@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   User as UserIcon, 
   Lock, 
@@ -7,18 +7,54 @@ import {
   LogOut,
   ChevronRight,
   Mail,
-  Smartphone
+  X,
+  CheckCircle2
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../../lib/AuthContext';
 import { UserRole } from '../../data';
 
 export const Settings: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   if (!user) return null;
 
   const isAdmin = user.role === UserRole.ADMIN;
+
+  const handleUpdateEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await updateUser({ email: newEmail });
+      setStatus({ type: 'success', message: 'Email mis à jour avec succès.' });
+      setShowEmailModal(false);
+      setNewEmail('');
+    } catch (error) {
+      setStatus({ type: 'error', message: 'Erreur lors de la mise à jour.' });
+    }
+  };
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      setStatus({ type: 'error', message: 'Les mots de passe ne correspondent pas.' });
+      return;
+    }
+    try {
+      await updateUser({ password: newPassword });
+      setStatus({ type: 'success', message: 'Mot de passe mis à jour avec succès.' });
+      setShowPasswordModal(false);
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      setStatus({ type: 'error', message: 'Erreur lors de la mise à jour.' });
+    }
+  };
 
   const sections = [
     {
@@ -26,15 +62,28 @@ export const Settings: React.FC = () => {
       show: isAdmin,
       items: [
         { icon: UserIcon, label: 'Profile', value: user.name, color: 'bg-blue-50 text-blue-600' },
-        { icon: Mail, label: 'Email', value: user.email, color: 'bg-purple-50 text-purple-600' },
-        { icon: Smartphone, label: 'Téléphone', value: '+261 34 00 000 00', color: 'bg-blue-50 text-blue-600' },
+        { 
+          icon: Mail, 
+          label: 'Changer l\'Email', 
+          value: user.email, 
+          color: 'bg-purple-50 text-purple-600',
+          onClick: () => {
+            setNewEmail(user.email);
+            setShowEmailModal(true);
+          }
+        },
       ]
     },
     {
       title: 'Sécurité',
       show: isAdmin,
       items: [
-        { icon: Lock, label: 'Changer le mot de passe', color: 'bg-blue-50 text-blue-600' },
+        { 
+          icon: Lock, 
+          label: 'Changer le mot de passe', 
+          color: 'bg-blue-50 text-blue-600',
+          onClick: () => setShowPasswordModal(true)
+        },
         { icon: Shield, label: 'Authentification à deux facteurs', color: 'bg-blue-50 text-blue-600' },
       ]
     },
@@ -54,6 +103,22 @@ export const Settings: React.FC = () => {
         <h1 className="text-3xl font-display font-bold text-text-dark mb-2">Paramètres</h1>
         <p className="text-text-muted">Gérez vos informations personnelles et vos préférences.</p>
       </div>
+
+      {status && (
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`p-4 rounded-2xl flex items-center gap-3 ${
+            status.type === 'success' ? 'bg-blue-50 text-blue-700 border border-blue-100' : 'bg-error/10 text-error border border-error/20'
+          }`}
+        >
+          {status.type === 'success' ? <CheckCircle2 size={20} /> : <X size={20} />}
+          <p className="text-sm font-bold">{status.message}</p>
+          <button onClick={() => setStatus(null)} className="ml-auto">
+            <X size={16} />
+          </button>
+        </motion.div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
@@ -92,7 +157,9 @@ export const Settings: React.FC = () => {
                 {section.items.map((item, i) => (
                   <button 
                     key={i}
-                    className="w-full px-8 py-4 flex items-center justify-between hover:bg-bg-light transition-colors text-left"
+                    onClick={item.onClick}
+                    disabled={!item.onClick && !item.toggle}
+                    className={`w-full px-8 py-4 flex items-center justify-between transition-colors text-left ${item.onClick ? 'hover:bg-bg-light' : ''}`}
                   >
                     <div className="flex items-center gap-4">
                       <div className={`w-10 h-10 ${item.color} rounded-xl flex items-center justify-center`}>
@@ -107,9 +174,9 @@ export const Settings: React.FC = () => {
                       <div className="w-10 h-6 bg-[#001D4A] rounded-full relative">
                         <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm" />
                       </div>
-                    ) : (
+                    ) : item.onClick ? (
                       <ChevronRight size={18} className="text-text-muted" />
-                    )}
+                    ) : null}
                   </button>
                 ))}
               </div>
@@ -117,6 +184,114 @@ export const Settings: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* Modals */}
+      <AnimatePresence>
+        {showEmailModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowEmailModal(false)}
+              className="absolute inset-0 bg-[#001D4A]/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-md bg-white rounded-[32px] shadow-2xl p-8 overflow-hidden"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-display font-bold text-text-dark">Modifier l'Email</h3>
+                <button 
+                  onClick={() => setShowEmailModal(false)}
+                  className="p-2 hover:bg-bg-light rounded-xl transition-all"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleUpdateEmail} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2">Nouvel Email</label>
+                  <input 
+                    type="email" 
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    required
+                    className="w-full px-6 py-4 bg-bg-light rounded-2xl border-none focus:ring-2 focus:ring-[#001D4A] transition-all font-medium"
+                    placeholder="nouvel@email.mg"
+                  />
+                </div>
+                <button 
+                  type="submit"
+                  className="w-full py-4 bg-[#001D4A] text-white font-bold rounded-2xl hover:bg-[#00215E] transition-all"
+                >
+                  Mettre à jour
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+
+        {showPasswordModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowPasswordModal(false)}
+              className="absolute inset-0 bg-[#001D4A]/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-md bg-white rounded-[32px] shadow-2xl p-8 overflow-hidden"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-display font-bold text-text-dark">Modifier le Mot de Passe</h3>
+                <button 
+                  onClick={() => setShowPasswordModal(false)}
+                  className="p-2 hover:bg-bg-light rounded-xl transition-all"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleUpdatePassword} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2">Nouveau Mot de Passe</label>
+                  <input 
+                    type="password" 
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    className="w-full px-6 py-4 bg-bg-light rounded-2xl border-none focus:ring-2 focus:ring-[#001D4A] transition-all font-medium"
+                    placeholder="••••••••"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2">Confirmer le Mot de Passe</label>
+                  <input 
+                    type="password" 
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className="w-full px-6 py-4 bg-bg-light rounded-2xl border-none focus:ring-2 focus:ring-[#001D4A] transition-all font-medium"
+                    placeholder="••••••••"
+                  />
+                </div>
+                <button 
+                  type="submit"
+                  className="w-full py-4 bg-[#001D4A] text-white font-bold rounded-2xl hover:bg-[#00215E] transition-all"
+                >
+                  Mettre à jour
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

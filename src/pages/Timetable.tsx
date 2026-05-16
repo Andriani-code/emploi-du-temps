@@ -80,7 +80,7 @@ const SessionCard = ({ session, days, times }: any) => (
           session.color === 'blue' ? 'bg-blue-50 text-blue-600' :
           session.color === 'purple' ? 'bg-purple-50 text-purple-600' :
           session.color === 'rose' ? 'bg-rose-50 text-rose-600' :
-          'bg-emerald-50 text-emerald-600'
+          'bg-indigo-50 text-indigo-600'
         }`}>
           {session.teacher}
         </div>
