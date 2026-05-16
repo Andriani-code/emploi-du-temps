@@ -62,30 +62,30 @@ export const Subjects: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-display font-bold text-text-dark mb-2">Gestion des Matières</h1>
-          <p className="text-text-muted">Gérez les unités d'enseignement de l'EMIT.</p>
+          <h1 className="text-2xl font-display font-bold text-text-dark mb-1">Gestion des Matières</h1>
+          <p className="text-xs text-text-muted">Gérez les unités d'enseignement de l'EMIT.</p>
         </div>
         <button 
           onClick={() => handleOpenModal()}
-          className="bg-[#001D4A] hover:bg-[#00215E] text-white px-6 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-[#001D4A]/20 flex items-center gap-2 w-fit"
+          className="bg-[#001D4A] hover:bg-[#00215E] text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 w-fit"
         >
-          <Plus size={20} />
+          <Plus size={18} />
           Ajouter une matière
         </button>
       </div>
 
-      <div className="bg-white p-4 rounded-3xl border border-border shadow-sm flex flex-col md:flex-row gap-4">
+      <div className="bg-white p-3 rounded-2xl border border-border shadow-sm flex flex-col md:flex-row gap-3">
         <div className="relative flex-grow group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-[#001D4A]" size={18} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-[#001D4A]" size={16} />
           <input 
             type="text" 
             placeholder="Rechercher par nom ou code..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-bg-light border border-border rounded-2xl py-3 pl-12 pr-4 outline-none transition-all focus:border-[#001D4A] focus:ring-4 focus:ring-[#001D4A]/5 text-sm"
+            className="w-full bg-bg-light border border-border rounded-xl py-2 pl-10 pr-4 outline-none transition-all focus:border-[#001D4A] focus:ring-4 focus:ring-[#001D4A]/5 text-xs"
           />
         </div>
       </div>
@@ -97,38 +97,38 @@ export const Subjects: React.FC = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.05 }}
-            className="bg-white rounded-3xl border border-border p-6 shadow-sm hover:shadow-md transition-all group"
+            className="bg-white rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-all group"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center">
-                <BookOpen size={24} />
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center">
+                <BookOpen size={20} />
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button 
                   onClick={() => handleOpenModal(s)}
-                  className="p-2 hover:bg-bg-light rounded-lg text-text-muted hover:text-[#001D4A]"
+                  className="p-1.5 hover:bg-bg-light rounded-lg text-text-muted hover:text-[#001D4A]"
                 >
-                  <Edit2 size={16} />
+                  <Edit2 size={14} />
                 </button>
                 <button 
                   onClick={() => handleDelete(s.id)}
-                  className="p-2 hover:bg-bg-light rounded-lg text-text-muted hover:text-error"
+                  className="p-1.5 hover:bg-bg-light rounded-lg text-text-muted hover:text-error"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={14} />
                 </button>
               </div>
             </div>
-            <h3 className="text-lg font-bold text-text-dark mb-1 leading-tight">{s.name}</h3>
-            <div className="flex items-center gap-2 text-xs font-bold text-text-muted">
-              <Code size={14} className="text-[#001D4A]/60" />
+            <h3 className="text-sm font-bold text-text-dark mb-1 leading-tight">{s.name}</h3>
+            <div className="flex items-center gap-2 text-[10px] font-bold text-text-muted">
+              <Code size={12} className="text-[#001D4A]/60" />
               {s.code}
             </div>
-            <div className="mt-6 pt-6 border-t border-border flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Matière Actif</span>
+            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                <span className="text-[9px] font-bold text-text-muted uppercase tracking-wider">Actif</span>
               </div>
-              <span className="text-[10px] font-bold text-text-dark bg-bg-light px-2 py-1 rounded">UE</span>
+              <span className="text-[9px] font-bold text-text-dark bg-bg-light px-1.5 py-0.5 rounded">UE</span>
             </div>
           </motion.div>
         ))}
@@ -149,55 +149,55 @@ export const Subjects: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white rounded-[32px] p-8 shadow-2xl relative w-full max-w-lg"
+              className="bg-white rounded-2xl p-6 shadow-2xl relative w-full max-w-lg"
             >
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-display font-bold text-text-dark">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-display font-bold text-text-dark">
                   {editingSubject ? 'Modifier la matière' : 'Nouvelle matière'}
                 </h3>
-                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-bg-light rounded-xl transition-colors text-text-muted">
-                  <X size={24} />
+                <button onClick={() => setShowModal(false)} className="p-1.5 hover:bg-bg-light rounded-lg transition-colors text-text-muted">
+                  <X size={20} />
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-dark ml-1">Nom de la matière</label>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-text-dark ml-1 uppercase tracking-wider">Nom de la matière</label>
                   <input 
                     type="text" 
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="ex: Mathématiques, Algorithmique..."
                     required
-                    className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
+                    className="w-full bg-bg-light border border-border rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-dark ml-1">Code de la matière</label>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-text-dark ml-1 uppercase tracking-wider">Code de la matière</label>
                   <input 
                     type="text" 
                     value={formData.code}
                     onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                     placeholder="ex: MATH101, INF202..."
                     required
-                    className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
+                    className="w-full bg-bg-light border border-border rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
                   />
                 </div>
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex gap-3 pt-2">
                   <button 
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="flex-1 px-6 py-4 rounded-2xl border border-border text-text-dark font-bold hover:bg-bg-light transition-all"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-border text-text-dark text-xs font-bold hover:bg-bg-light transition-all"
                   >
                     Annuler
                   </button>
                   <button 
                     type="submit"
-                    className="flex-1 px-6 py-4 rounded-2xl bg-[#001D4A] text-white font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/20 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2.5 bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/10 transition-all flex items-center justify-center gap-2"
                   >
-                    <Check size={20} />
+                    <Check size={16} />
                     Enregistrer
                   </button>
                 </div>

@@ -245,25 +245,25 @@ export const Timetable = () => {
   const levels = ['L1', 'L2', 'L3', 'M1', 'M2'];
 
   return (
-    <div className="pt-24 pb-16 px-6 lg:px-12">
-      <div className="max-w-6xl mx-auto space-y-10">
+    <div className="pt-20 pb-12 px-6 lg:px-12">
+      <div className="max-w-6xl mx-auto space-y-8">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-          <div className="space-y-2 flex-grow">
-            <h1 className="text-2xl md:text-3xl font-bold text-text-dark tracking-tight">Emplois du temps</h1>
-            <p className="text-sm text-text-muted max-w-2xl leading-relaxed">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-5">
+          <div className="space-y-1.5 flex-grow">
+            <h1 className="text-2xl font-bold text-text-dark tracking-tight">Emplois du temps</h1>
+            <p className="text-xs text-text-muted max-w-2xl leading-relaxed">
               Filtrez par mention ou parcours pour trouver votre classe.
             </p>
           </div>
           
-          <div className="relative group w-full md:w-72">
-            <Search className={`absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors ${searchQuery ? 'text-primary' : 'text-text-muted'}`} size={16} />
+          <div className="relative group w-full md:w-64">
+            <Search className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors ${searchQuery ? 'text-primary' : 'text-text-muted'}`} size={14} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Rechercher..."
-              className="w-full bg-white border border-border rounded-xl py-2.5 pl-10 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all shadow-sm group-hover:border-primary/30"
+              className="w-full bg-white border border-border rounded-xl py-2 pl-9 pr-9 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all shadow-sm group-hover:border-primary/30"
             />
             <AnimatePresence>
               {searchQuery && (
@@ -282,7 +282,7 @@ export const Timetable = () => {
         </div>
 
         {/* Filters */}
-        <div className="p-6 bg-bg-light border border-border rounded-2xl flex flex-col lg:flex-row items-end gap-4 shadow-sm">
+        <div className="p-4 bg-bg-light border border-border rounded-2xl flex flex-col lg:flex-row items-end gap-4 shadow-sm">
           <SelectField 
             label="Mention" 
             options={mentions} 
@@ -304,11 +304,11 @@ export const Timetable = () => {
         </div>
 
         {/* Tabs for Results */}
-        <div className="space-y-8">
+        <div className="space-y-6">
           <div className="flex items-center gap-6 border-b border-border pb-1 overflow-x-auto whitespace-nowrap">
             <button 
               onClick={() => setActiveTab('classes')}
-              className={`relative py-3 px-4 text-sm font-bold transition-all ${activeTab === 'classes' ? 'text-primary' : 'text-text-muted hover:text-text-dark'}`}
+              className={`relative py-2.5 px-4 text-xs font-bold transition-all ${activeTab === 'classes' ? 'text-primary' : 'text-text-muted hover:text-text-dark'}`}
             >
               Classes trouvées ({filteredClasses.length})
               {activeTab === 'classes' && (
@@ -318,7 +318,7 @@ export const Timetable = () => {
             {searchQuery && (
               <button 
                 onClick={() => setActiveTab('sessions')}
-                className={`relative py-3 px-4 text-sm font-bold transition-all ${activeTab === 'sessions' ? 'text-primary' : 'text-text-muted hover:text-text-dark'}`}
+                className={`relative py-2.5 px-4 text-xs font-bold transition-all ${activeTab === 'sessions' ? 'text-primary' : 'text-text-muted hover:text-text-dark'}`}
               >
                 Séances prof ({filteredSessions.length})
                 {activeTab === 'sessions' && (

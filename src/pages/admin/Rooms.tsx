@@ -65,54 +65,54 @@ export const Rooms: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-display font-bold text-text-dark mb-2">Gestion des Salles</h1>
-          <p className="text-text-muted">Consultez et gérez les salles de l'EMIT.</p>
+          <h1 className="text-2xl font-display font-bold text-text-dark mb-1">Gestion des Salles</h1>
+          <p className="text-xs text-text-muted">Consultez et gérez les salles de l'EMIT.</p>
         </div>
         <button 
           onClick={() => handleOpenModal()}
-          className="bg-[#001D4A] hover:bg-[#00215E] text-white px-6 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-[#001D4A]/20 flex items-center gap-2 w-fit"
+          className="bg-[#001D4A] hover:bg-[#00215E] text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2 w-fit"
         >
-          <Plus size={20} />
+          <Plus size={18} />
           Ajouter une salle
         </button>
       </div>
 
       {/* Filters/Search */}
-      <div className="bg-white p-4 rounded-3xl border border-border shadow-sm flex flex-col md:flex-row gap-4">
+      <div className="bg-white p-3 rounded-2xl border border-border shadow-sm flex flex-col md:flex-row gap-3">
         <div className="relative flex-grow group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-[#001D4A]" size={18} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-[#001D4A]" size={16} />
           <input 
             type="text" 
             placeholder="Rechercher une salle..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-bg-light border border-border rounded-2xl py-3 pl-12 pr-4 outline-none transition-all focus:border-[#001D4A] focus:ring-4 focus:ring-[#001D4A]/5 text-sm"
+            className="w-full bg-bg-light border border-border rounded-xl py-2 pl-10 pr-4 outline-none transition-all focus:border-[#001D4A] focus:ring-4 focus:ring-[#001D4A]/5 text-xs"
           />
         </div>
         <div className="flex gap-2">
-          <button className="flex items-center gap-2 px-4 py-3 bg-bg-light border border-border rounded-2xl text-sm font-bold text-text-dark hover:bg-border/50 transition-colors">
-            <Filter size={18} className="text-text-muted" />
+          <button className="flex items-center gap-2 px-3 py-2 bg-white border border-border rounded-xl text-xs font-bold text-text-dark hover:bg-bg-light transition-colors">
+            <Filter size={16} className="text-text-muted" />
             Type
           </button>
-          <button className="flex items-center gap-2 px-4 py-3 bg-bg-light border border-border rounded-2xl text-sm font-bold text-text-dark hover:bg-border/50 transition-colors">
+          <button className="flex items-center gap-2 px-3 py-2 bg-white border border-border rounded-xl text-xs font-bold text-text-dark hover:bg-bg-light transition-colors">
             Capacité
           </button>
         </div>
       </div>
 
       {/* Rooms Table */}
-      <div className="bg-white rounded-3xl border border-border overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-bg-light border-b border-border">
-                <th className="px-6 py-4 text-xs font-bold text-text-muted uppercase tracking-wider">Nom</th>
-                <th className="px-6 py-4 text-xs font-bold text-text-muted uppercase tracking-wider">Capacité</th>
-                <th className="px-6 py-4 text-xs font-bold text-text-muted uppercase tracking-wider">Type</th>
-                <th className="px-6 py-4 text-xs font-bold text-text-muted uppercase tracking-wider text-right">Actions</th>
+                <th className="px-4 py-3 text-[10px] font-bold text-text-muted uppercase tracking-wider">Nom</th>
+                <th className="px-4 py-3 text-[10px] font-bold text-text-muted uppercase tracking-wider">Capacité</th>
+                <th className="px-4 py-3 text-[10px] font-bold text-text-muted uppercase tracking-wider">Type</th>
+                <th className="px-4 py-3 text-[10px] font-bold text-text-muted uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -124,22 +124,22 @@ export const Rooms: React.FC = () => {
                   key={room.id} 
                   className="hover:bg-bg-light/50 transition-colors"
                 >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-[#001D4A]/5 text-[#001D4A] rounded-xl flex items-center justify-center">
-                        < DoorOpen size={20} />
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 bg-[#001D4A]/5 text-[#001D4A] rounded-lg flex items-center justify-center">
+                        < DoorOpen size={16} />
                       </div>
-                      <span className="font-bold text-text-dark">{room.name}</span>
+                      <span className="font-bold text-text-dark text-sm">{room.name}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 text-text-muted text-sm font-medium">
-                      <Users size={14} className="text-accent" />
-                      {room.capacity} places
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1.5 text-text-muted text-xs font-medium">
+                      <Users size={12} className="text-accent" />
+                      {room.capacity} pl.
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <span className={`text-[10px] font-bold px-2 py-1 rounded-lg uppercase tracking-wider ${
+                  <td className="px-4 py-3">
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider ${
                       room.type === 'Amphi' ? 'bg-purple-50 text-purple-600' :
                       room.type === 'TP' ? 'bg-blue-50 text-blue-600' :
                       'bg-orange-50 text-orange-600'
@@ -147,19 +147,19 @@ export const Rooms: React.FC = () => {
                       {room.type}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex items-center justify-end gap-1.5">
                       <button 
                         onClick={() => handleOpenModal(room)}
-                        className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-border text-text-muted hover:text-[#001D4A] transition-all"
+                        className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-border text-text-muted hover:text-[#001D4A] transition-all"
                       >
-                        <Edit2 size={16} />
+                        <Edit2 size={14} />
                       </button>
                       <button 
                         onClick={() => handleDelete(room.id)}
-                        className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-border text-text-muted hover:text-error transition-all"
+                        className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-border text-text-muted hover:text-error transition-all"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={14} />
                       </button>
                     </div>
                   </td>
@@ -193,47 +193,47 @@ export const Rooms: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white rounded-[32px] p-8 shadow-2xl relative w-full max-w-lg"
+              className="bg-white rounded-2xl p-6 shadow-2xl relative w-full max-w-lg"
             >
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-display font-bold text-text-dark">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-display font-bold text-text-dark">
                   {editingRoom ? 'Modifier la salle' : 'Nouvelle salle'}
                 </h3>
-                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-bg-light rounded-xl transition-colors text-text-muted">
-                  <X size={24} />
+                <button onClick={() => setShowModal(false)} className="p-1.5 hover:bg-bg-light rounded-lg transition-colors text-text-muted">
+                  <X size={20} />
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-dark ml-1">Nom de la salle</label>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-text-dark ml-1 uppercase tracking-wider">Nom de la salle</label>
                   <input 
                     type="text" 
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="ex: B101, AMPHI..."
                     required
-                    className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
+                    className="w-full bg-bg-light border border-border rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-text-dark ml-1">Capacité</label>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-text-dark ml-1 uppercase tracking-wider">Capacité</label>
                     <input 
                       type="number" 
                       value={formData.capacity}
                       onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) })}
                       required
-                      className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
+                      className="w-full bg-bg-light border border-border rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-text-dark ml-1">Type</label>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-text-dark ml-1 uppercase tracking-wider">Type</label>
                     <select 
                       value={formData.type}
                       onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                      className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
+                      className="w-full bg-bg-light border border-border rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-[#001D4A]/20 transition-all"
                     >
                       <option value="TD">TD</option>
                       <option value="TP">TP</option>
@@ -242,19 +242,19 @@ export const Rooms: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex gap-3 pt-2">
                   <button 
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="flex-1 px-6 py-4 rounded-2xl border border-border text-text-dark font-bold hover:bg-bg-light transition-all"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-border text-text-dark text-xs font-bold hover:bg-bg-light transition-all"
                   >
                     Annuler
                   </button>
                   <button 
                     type="submit"
-                    className="flex-1 px-6 py-4 rounded-2xl bg-[#001D4A] text-white font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/20 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2.5 bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/10 transition-all flex items-center justify-center gap-2"
                   >
-                    <CheckCircle2 size={20} />
+                    <CheckCircle2 size={16} />
                     Enregistrer
                   </button>
                 </div>

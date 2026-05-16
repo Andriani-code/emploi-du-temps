@@ -74,27 +74,27 @@ export const NotificationsPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-display font-bold text-text-dark mb-2">Centre de Notifications</h1>
-          <p className="text-text-muted">Consultez l'historique de vos alertes et messages système.</p>
+          <h1 className="text-2xl font-display font-bold text-text-dark mb-1">Centre de Notifications</h1>
+          <p className="text-xs text-text-muted">Consultez l'historique de vos alertes et messages système.</p>
         </div>
         <div className="flex gap-4">
           {selectedIds.length > 0 && (
             <button 
               onClick={handleBulkDelete}
-              className="flex items-center gap-2 text-sm font-bold text-error hover:underline transition-all"
+              className="flex items-center gap-2 text-xs font-bold text-error hover:underline transition-all"
             >
-              <Trash2 size={16} />
+              <Trash2 size={14} />
               Supprimer ({selectedIds.length})
             </button>
           )}
           <button 
             onClick={markAllAsRead}
-            className="flex items-center gap-2 text-sm font-bold text-[#001D4A] hover:underline transition-all"
+            className="flex items-center gap-2 text-xs font-bold text-[#001D4A] hover:underline transition-all"
           >
-            <CheckCheck size={16} />
+            <CheckCheck size={14} />
             Tout marquer comme lu
           </button>
         </div>
@@ -111,15 +111,15 @@ export const NotificationsPage: React.FC = () => {
           </div>
         ) : (
           <div>
-            <div className="px-6 py-4 bg-bg-light/30 border-b border-border flex items-center gap-4">
+            <div className="px-5 py-3 bg-bg-light/30 border-b border-border flex items-center gap-4">
               <button 
                 onClick={toggleSelectAll}
                 className="text-text-muted hover:text-[#001D4A] transition-colors"
                 title={allSelected ? "Désélectionner tout" : "Sélectionner tout"}
               >
-                {allSelected ? <CheckSquare size={20} className="text-[#001D4A]" /> : <Square size={20} />}
+                {allSelected ? <CheckSquare size={18} className="text-[#001D4A]" /> : <Square size={18} />}
               </button>
-              <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
+              <span className="text-[9px] font-bold text-text-muted uppercase tracking-wider">
                 {selectedIds.length > 0 ? `${selectedIds.length} notification(s) sélectionnée(s)` : 'Sélectionner tout'}
               </span>
             </div>
@@ -131,38 +131,38 @@ export const NotificationsPage: React.FC = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className={`p-6 flex items-start group relative transition-colors border-l-4 ${getBorderColor(n.type, n.read)} ${!n.read ? 'bg-[#001D4A]/5' : 'hover:bg-bg-light'}`}
+                    className={`p-4 flex items-start group relative transition-colors border-l-4 ${getBorderColor(n.type, n.read)} ${!n.read ? 'bg-[#001D4A]/5' : 'hover:bg-bg-light'}`}
                   >
                     <div className="flex items-start gap-4 flex-grow">
                       <button 
                         onClick={() => toggleSelect(n.id)}
                         className={`mt-1 transition-colors ${selectedIds.includes(n.id) ? 'text-[#001D4A]' : 'text-text-muted group-hover:text-[#001D4A]/50'}`}
                       >
-                        {selectedIds.includes(n.id) ? <CheckSquare size={20} /> : <Square size={20} />}
+                        {selectedIds.includes(n.id) ? <CheckSquare size={18} /> : <Square size={18} />}
                       </button>
                       <div className="mt-1">
                         {getIcon(n.type)}
                       </div>
-                      <div className="space-y-1">
+                      <div className="space-y-0.5">
                         <div className="flex items-center gap-3">
-                          <h4 className={`font-bold ${!n.read ? 'text-[#001D4A]' : 'text-text-dark'}`}>{n.title}</h4>
+                          <h4 className={`text-sm font-bold ${!n.read ? 'text-[#001D4A]' : 'text-text-dark'}`}>{n.title}</h4>
                           {!n.read && (
                             <div className="w-1.5 h-1.5 bg-[#001D4A] rounded-full"></div>
                           )}
                         </div>
-                        <p className="text-sm text-text-muted leading-relaxed max-w-2xl">{n.message}</p>
-                        <div className="flex items-center gap-2 text-[10px] font-bold text-text-muted uppercase tracking-wider mt-2">
-                          <Clock size={12} />
+                        <p className="text-xs text-text-muted leading-relaxed max-w-2xl">{n.message}</p>
+                        <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider mt-1.5">
+                          <Clock size={10} />
                           {n.time}
                         </div>
                       </div>
                     </div>
                     <button 
                       onClick={() => clearNotification(n.id)}
-                      className="p-2 opacity-0 group-hover:opacity-100 transition-all text-text-muted hover:text-error"
+                      className="p-1.5 opacity-0 group-hover:opacity-100 transition-all text-text-muted hover:text-error"
                       title="Supprimer"
                     >
-                      <Trash2 size={18} />
+                      <Trash2 size={16} />
                     </button>
                   </motion.div>
                 ))}

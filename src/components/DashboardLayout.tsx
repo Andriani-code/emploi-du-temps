@@ -103,15 +103,15 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
         className={`bg-secondary text-white flex flex-col fixed h-full z-[60] shadow-xl md:shadow-none lg:shadow-xl transition-all duration-300`}
       >
-        <div className={`p-6 flex items-center transition-all duration-300 ${isSidebarOpen ? 'justify-start overflow-hidden' : 'justify-center'}`}>
+        <div className={`p-4 flex items-center transition-all duration-300 ${isSidebarOpen ? 'justify-start overflow-hidden' : 'justify-center'}`}>
           <img 
             src={logo} 
             alt="EMIT" 
-            className={`w-10 h-10 object-contain brightness-0 invert transition-transform duration-300 ${isSidebarOpen ? 'scale-110' : 'scale-100'}`} 
+            className={`w-8 h-8 object-contain brightness-0 invert transition-transform duration-300 ${isSidebarOpen ? 'scale-110' : 'scale-100'}`} 
           />
         </div>
 
-        <nav className="flex-grow px-4 space-y-2 mt-4">
+        <nav className="flex-grow px-3 space-y-1 mt-4">
           {filteredItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -121,18 +121,18 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                 onClick={() => {
                   if (window.innerWidth < 1024) setIsSidebarOpen(false);
                 }}
-                className={`flex items-center gap-4 p-3 rounded-xl transition-all ${
+                className={`flex items-center gap-3 p-2.5 rounded-lg transition-all ${
                   isActive 
-                    ? 'bg-accent text-white shadow-lg shadow-accent/20' 
+                    ? 'bg-accent text-white shadow-md shadow-accent/20' 
                     : 'text-white/60 hover:bg-white/5 hover:text-white'
                 }`}
               >
-                <item.icon size={20} />
+                <item.icon size={18} />
                 {(isSidebarOpen || window.innerWidth < 1024) && (
                   <motion.span 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="font-medium whitespace-nowrap"
+                    className="font-medium whitespace-nowrap text-sm"
                   >
                     {item.name}
                   </motion.span>
@@ -142,12 +142,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
           })}
         </nav>
 
-        <div className="p-4 mt-auto">
+        <div className="p-3 mt-auto">
           <button 
             onClick={logout}
-            className="flex items-center gap-4 w-full p-3 rounded-xl text-white/60 hover:bg-error/10 hover:text-error transition-all"
+            className="flex items-center gap-3 w-full p-2.5 rounded-lg text-white/60 hover:bg-error/10 hover:text-error transition-all text-sm"
           >
-            <LogOut size={20} />
+            <LogOut size={18} />
             {(isSidebarOpen || window.innerWidth < 1024) && <span className="font-medium">Déconnexion</span>}
           </button>
         </div>
@@ -163,28 +163,28 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         className="flex-grow min-h-screen relative w-full"
       >
         {/* Top Header */}
-        <header className="h-20 bg-white border-b border-border px-4 sm:px-8 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-md">
-          <div className="flex items-center gap-6">
+        <header className="h-16 bg-white border-b border-border px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-md">
+          <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 hover:bg-bg-light rounded-lg transition-colors text-text-muted"
+              className="p-1.5 hover:bg-bg-light rounded-lg transition-colors text-text-muted"
             >
-              {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+              {isSidebarOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <div className="relative">
               <button 
                 onClick={() => {
                   setShowNotifications(!showNotifications);
                   if (!showNotifications) markAllAsRead();
                 }}
-                className="relative p-2 text-text-muted hover:text-[#001D4A] transition-colors"
+                className="relative p-1.5 text-text-muted hover:text-[#001D4A] transition-colors"
               >
-                <Bell size={20} />
+                <Bell size={18} />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-error rounded-full border-2 border-white flex items-center justify-center text-[8px] font-bold text-white">
+                  <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-error rounded-full border-2 border-white flex items-center justify-center text-[7px] font-bold text-white">
                     {unreadCount}
                   </span>
                 )}
@@ -252,23 +252,23 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               </AnimatePresence>
             </div>
 
-            <div className="flex items-center gap-3 pl-6 border-l border-border">
+            <div className="flex items-center gap-3 pl-4 border-l border-border">
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-bold text-text-dark">{user.name}</p>
                 <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{user.role}</p>
               </div>
-              <div className="w-10 h-10 bg-bg-light rounded-full border border-border flex items-center justify-center text-primary overflow-hidden">
+              <div className="w-9 h-9 bg-bg-light rounded-full border border-border flex items-center justify-center text-primary overflow-hidden">
                 {user.avatar ? (
                   <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                 ) : (
-                  <UserIcon size={20} />
+                  <UserIcon size={18} />
                 )}
               </div>
             </div>
           </div>
         </header>
 
-        <div className="p-8 pb-12">
+        <div className="p-4 sm:p-6 pb-12">
           {children}
         </div>
       </motion.main>

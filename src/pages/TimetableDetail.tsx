@@ -282,38 +282,38 @@ export const TimetableDetail = () => {
   }, [schedule]);
 
   return (
-    <div className="pt-24 pb-16 px-6 lg:px-12 space-y-12">
+    <div className="pt-20 pb-12 px-6 lg:px-12 space-y-10">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-          <div className="space-y-2">
-            <Link to="/timetable" className="inline-flex items-center gap-2 text-xs font-bold text-primary hover:gap-3 transition-all mb-1">
-              <ArrowLeft size={14} />
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+          <div className="space-y-1.5">
+            <Link to="/timetable" className="inline-flex items-center gap-2 text-[10px] font-bold text-primary hover:gap-3 transition-all mb-0.5">
+              <ArrowLeft size={12} />
               Retour
             </Link>
-            <h1 className="text-2xl font-bold text-text-dark tracking-tight">{classInfo.level} - {classInfo.mention}</h1>
+            <h1 className="text-xl font-bold text-text-dark tracking-tight">{classInfo.level} - {classInfo.mention}</h1>
             <div className="flex items-center gap-3 text-text-muted">
-              <div className="flex items-center gap-1.5 text-xs">
-                <CalendarIcon size={14} />
+              <div className="flex items-center gap-1.5 text-[10px]">
+                <CalendarIcon size={12} />
                 {classInfo.parcours}
               </div>
               <div className="w-1 h-1 bg-border rounded-full"></div>
-              <div className="text-xs font-medium">{classInfo.year}</div>
+              <div className="text-[10px] font-medium">{classInfo.year}</div>
             </div>
           </div>
           
           <button 
             onClick={downloadPDF}
             disabled={isDownloading}
-            className="group relative bg-primary text-white px-5 py-3 rounded-xl font-bold hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/10 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden text-sm"
+            className="group relative bg-primary text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/10 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden"
           >
             {isDownloading ? (
               <>
-                <Loader2 size={20} className="animate-spin" />
+                <Loader2 size={16} className="animate-spin" />
                 Génération...
               </>
             ) : (
               <>
-                <Download size={20} className="group-hover:-translate-y-0.5 transition-transform" />
+                <Download size={16} className="group-hover:-translate-y-0.5 transition-transform" />
                 Télécharger PDF
               </>
             )}

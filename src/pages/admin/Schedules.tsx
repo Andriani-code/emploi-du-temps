@@ -96,7 +96,7 @@ const DraggableSchedule: React.FC<DraggableScheduleProps> = ({ schedule, isMySlo
   const rowSpan = endIdx !== -1 && startIdx !== -1 ? endIdx - startIdx + 1 : 1;
 
   return (
-    <motion.div 
+      <motion.div 
       ref={setNodeRef}
       style={{
         ...style,
@@ -110,8 +110,8 @@ const DraggableSchedule: React.FC<DraggableScheduleProps> = ({ schedule, isMySlo
       }}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: isDragging ? 0.5 : 1, scale: 1 }}
-      className={`h-full p-3 rounded-xl border flex flex-col justify-between transition-all cursor-default relative overflow-hidden group/card ${
-        isDragging ? 'shadow-2xl ring-2 ring-primary z-50' : ''
+      className={`h-full p-2 rounded-lg border flex flex-col justify-between transition-all cursor-default relative overflow-hidden group/card ${
+        isDragging ? 'shadow-lg ring-2 ring-primary z-50' : ''
       } ${
         isMySlot || isAdmin
           ? schedule.status === 'pending'
@@ -121,45 +121,42 @@ const DraggableSchedule: React.FC<DraggableScheduleProps> = ({ schedule, isMySlo
       }`}
     >
       <div className={!(isMySlot || isAdmin) ? 'pointer-events-none' : ''}>
-        <div className="flex items-start justify-between mb-1">
-          <div className="flex items-center gap-1.5 overflow-hidden">
+        <div className="flex items-start justify-between mb-0.5">
+          <div className="flex items-center gap-1 overflow-hidden">
             {(isMySlot || isAdmin) && !isDragging && schedule.status !== 'pending' && (
-              <GripVertical size={12} className="text-primary/40 cursor-grab active:cursor-grabbing shrink-0" />
+              <GripVertical size={10} className="text-primary/30 cursor-grab active:cursor-grabbing shrink-0" />
             )}
-            <h4 className={`text-xs font-bold leading-tight truncate ${!(isMySlot || isAdmin) ? 'text-text-muted' : 'text-text-dark'}`}>
+            <h4 className={`text-[11px] font-bold leading-tight truncate ${!(isMySlot || isAdmin) ? 'text-text-muted' : 'text-text-dark'}`}>
               {subjectName}
             </h4>
           </div>
           {schedule.status === 'validated' ? (
-            <CheckCircle2 size={12} className={`${!(isMySlot || isAdmin) ? 'text-text-muted' : 'text-blue-600'} shrink-0`} />
+            <CheckCircle2 size={10} className={`${!(isMySlot || isAdmin) ? 'text-text-muted' : 'text-blue-600'} shrink-0`} />
           ) : (
             <div className="flex items-center gap-1">
-              <AlertCircle size={12} className="text-orange-500 shrink-0 animate-pulse" />
-              {(isMySlot || isAdmin) && (
-                <span className="text-[7px] font-bold text-orange-400 opacity-0 group-hover/card:opacity-100 transition-opacity whitespace-nowrap">Annuler</span>
-              )}
+              <AlertCircle size={10} className="text-orange-500 shrink-0 animate-pulse" />
             </div>
           )}
         </div>
-        <div className="space-y-1">
-          <div className="flex items-center gap-1 text-[10px] font-medium text-text-muted truncate">
-            <Users size={10} className={isMySlot || isAdmin ? 'text-accent' : 'text-text-muted'} />
+        <div className="space-y-0.5">
+          <div className="flex items-center gap-1 text-[9px] font-medium text-text-muted truncate">
+            <Users size={9} className={isMySlot || isAdmin ? 'text-accent' : 'text-text-muted'} />
             {teacherName}
           </div>
-          <div className="flex items-center gap-1 text-[10px] font-medium text-text-muted truncate">
-            <MapPin size={10} className={isMySlot || isAdmin ? 'text-accent' : 'text-text-muted'} />
+          <div className="flex items-center gap-1 text-[9px] font-medium text-text-muted truncate">
+            <MapPin size={9} className={isMySlot || isAdmin ? 'text-accent' : 'text-text-muted'} />
             {roomName}
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-black/5">
-        <span className={`text-[8px] font-bold uppercase tracking-wider ${
+      <div className="flex items-center justify-between mt-1 pt-1 border-t border-black/5">
+        <span className={`text-[7px] font-bold uppercase tracking-wider ${
           !(isMySlot || isAdmin) ? 'text-text-muted' : schedule.status === 'validated' ? 'text-blue-700' : 'text-orange-700'
         }`}>
           {schedule.status === 'pending' ? 'Attente' : schedule.startTime}
         </span>
         {isAdmin && (
-          <MoreVertical size={10} className="text-text-muted group-hover/card:text-primary transition-colors" />
+          <MoreVertical size={9} className="text-text-muted group-hover/card:text-primary transition-colors" />
         )}
       </div>
     </motion.div>
@@ -398,39 +395,39 @@ export const Schedules: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-display font-bold text-text-dark mb-2">Emplois du temps</h1>
-          <p className="text-text-muted">
+          <h1 className="text-2xl font-display font-bold text-text-dark mb-1">Emplois du temps</h1>
+          <p className="text-xs text-text-muted">
             {isAdmin ? 'Gérez et validez les plannings des classes.' : 'Consultez votre planning et proposez des changements.'}
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2">
           {hasNoPending && !showOfficialView && (
             <button 
               onClick={() => setShowOfficialView(true)}
-              className="bg-[#001D4A] hover:bg-[#00215E] text-white px-4 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-[#001D4A]/20 flex items-center gap-2"
+              className="bg-[#001D4A] hover:bg-[#00215E] text-white px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2"
             >
-              <CheckCircle2 size={18} />
+              <CheckCircle2 size={16} />
               Vue officielle
             </button>
           )}
           {showOfficialView && (
             <button 
               onClick={() => setShowOfficialView(false)}
-              className="bg-primary hover:bg-primary-hover text-white px-4 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-primary/20 flex items-center gap-2"
+              className="bg-primary hover:bg-primary-hover text-white px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-primary/10 flex items-center gap-2"
             >
-              <CalendarIcon size={18} />
+              <CalendarIcon size={16} />
               Vue planning
             </button>
           )}
           <button 
             onClick={() => window.print()}
-            className="bg-bg-light border border-border text-text-dark px-4 py-3 rounded-2xl font-bold transition-all hover:bg-border/50 flex items-center gap-2"
+            className="bg-bg-light border border-border text-text-dark px-3 py-2 rounded-xl text-xs font-bold transition-all hover:bg-border/50 flex items-center gap-2"
           >
-            <Download size={18} />
-            Exporter PDF
+            <Download size={16} />
+            PDF
           </button>
           {isAdmin && (
             <button 
@@ -445,10 +442,10 @@ export const Schedules: React.FC = () => {
                 });
                 setShowAddModal(true);
               }}
-              className="bg-[#001D4A] hover:bg-[#00215E] text-white px-6 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-[#001D4A]/20 flex items-center gap-2"
+              className="bg-[#001D4A] hover:bg-[#00215E] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-[#001D4A]/10 flex items-center gap-2"
             >
-              <Plus size={20} />
-              Nouvelle affectation
+              <Plus size={18} />
+              Nouvelle
             </button>
           )}
         </div>
@@ -489,28 +486,27 @@ export const Schedules: React.FC = () => {
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="bg-white rounded-3xl border border-border overflow-hidden shadow-sm overflow-x-auto">
-              <div className="min-w-[1000px]">
+            <div className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm overflow-x-auto">
+              <div className="min-w-[900px]">
                 {/* Grid Header */}
-                <div className="grid grid-cols-[140px_repeat(6,1fr)] border-b border-border bg-bg-light">
-                  <div className="p-4"></div>
+                <div className="grid grid-cols-[100px_repeat(6,1fr)] border-b border-border bg-bg-light">
+                  <div className="p-3"></div>
                   {DAYS.map(day => (
-                    <div key={day} className="p-4 text-center font-bold text-text-dark text-sm border-l border-border">{day}</div>
+                    <div key={day} className="p-2.5 text-center font-bold text-text-dark text-xs border-l border-border">{day}</div>
                   ))}
                 </div>
 
                 {/* Grid Body */}
-                <div className="grid grid-cols-[140px_repeat(6,1fr)] bg-white relative">
+                <div className="grid grid-cols-[100px_repeat(6,1fr)] bg-white relative">
                   {/* Time Labels Column */}
                   {TIME_SLOTS.map((slot, sIdx) => (
                     <div 
                       key={`time-${sIdx}`}
-                      className="p-6 flex flex-col items-center justify-center border-b border-r border-border bg-bg-light/30 min-h-[100px]"
+                      className="p-3 flex flex-col items-center justify-center border-b border-r border-border bg-bg-light/30 min-h-[80px]"
                       style={{ gridRow: sIdx + 1, gridColumn: 1 }}
                     >
-                      <Clock size={16} className="text-primary mb-2 opacity-50" />
-                      <span className="text-xs font-bold text-text-dark text-center">{slot.split(' - ')[0]}</span>
-                      <span className="text-[10px] font-medium text-text-muted text-center italic">{slot.split(' - ')[1]}</span>
+                      <span className="text-[10px] font-bold text-text-dark text-center leading-none mb-1">{slot.split(' - ')[0]}</span>
+                      <span className="text-[9px] font-medium text-text-muted text-center italic">{slot.split(' - ')[1]}</span>
                     </div>
                   ))}
 
@@ -647,82 +643,82 @@ export const Schedules: React.FC = () => {
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="bg-white rounded-[32px] p-8 shadow-2xl relative w-full max-w-2xl overflow-y-auto max-h-[90vh]"
             >
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-display font-bold text-text-dark">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-display font-bold text-text-dark">
                   {editingSchedule ? 'Modifier l\'affectation' : 'Nouvelle affectation'}
                 </h3>
-                <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-bg-light rounded-xl transition-colors">
-                  <X size={24} className="text-text-muted" />
+                <button onClick={() => setShowAddModal(false)} className="p-1.5 hover:bg-bg-light rounded-lg transition-colors">
+                  <X size={20} className="text-text-muted" />
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-dark ml-1">Matière</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-text-dark ml-1 uppercase tracking-wider">Matière</label>
                   <select 
                     value={newAssignment.subjectId}
                     onChange={(e) => setNewAssignment({ ...newAssignment, subjectId: e.target.value })}
-                    className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full bg-bg-light border border-border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20"
                   >
                     <option value="">Sélectionner une matière</option>
                     {subjects.map(s => <option key={s.id} value={s.id}>{s.name} ({s.code})</option>)}
                   </select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-dark ml-1">Enseignant</label>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-text-dark ml-1 uppercase tracking-wider">Enseignant</label>
                   <select 
                     value={newAssignment.teacherId}
                     onChange={(e) => setNewAssignment({ ...newAssignment, teacherId: e.target.value })}
-                    className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full bg-bg-light border border-border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20"
                   >
                     <option value="">Sélectionner un enseignant</option>
                     {teachers.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                   </select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-dark ml-1">Salle</label>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-text-dark ml-1 uppercase tracking-wider">Salle</label>
                   <select 
                     value={newAssignment.roomId}
                     onChange={(e) => setNewAssignment({ ...newAssignment, roomId: e.target.value })}
-                    className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full bg-bg-light border border-border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20"
                   >
                     <option value="">Sélectionner une salle</option>
                     {rooms.map(r => <option key={r.id} value={r.id}>{r.name} ({r.type})</option>)}
                   </select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-dark ml-1">Jour</label>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-text-dark ml-1 uppercase tracking-wider">Jour</label>
                   <select 
                     value={newAssignment.day}
                     onChange={(e) => setNewAssignment({ ...newAssignment, day: parseInt(e.target.value) })}
-                    className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full bg-bg-light border border-border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20"
                   >
                     {DAYS.map((day, idx) => <option key={day} value={idx}>{day}</option>)}
                   </select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-dark ml-1">Heure de début</label>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-text-dark ml-1 uppercase tracking-wider">Début</label>
                   <input 
                     type="time" 
                     step="900"
                     value={newAssignment.startTime}
                     onChange={(e) => setNewAssignment({ ...newAssignment, startTime: e.target.value })}
-                    className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full bg-bg-light border border-border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-dark ml-1">Heure de fin</label>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-text-dark ml-1 uppercase tracking-wider">Fin</label>
                   <input 
                     type="time" 
                     step="900"
                     value={newAssignment.endTime}
                     onChange={(e) => setNewAssignment({ ...newAssignment, endTime: e.target.value })}
-                    className="w-full bg-bg-light border border-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full bg-bg-light border border-border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 {editingSchedule && (
                   <button 
                     onClick={() => {
@@ -731,7 +727,7 @@ export const Schedules: React.FC = () => {
                         setShowAddModal(false);
                       }
                     }}
-                    className="px-6 py-4 rounded-2xl border border-error/20 text-error font-bold hover:bg-error/5 transition-all flex items-center justify-center gap-2"
+                    className="px-4 py-2.5 rounded-xl border border-error/20 text-error text-xs font-bold hover:bg-error/5 transition-all flex items-center justify-center gap-2"
                   >
                     Supprimer
                   </button>
@@ -742,23 +738,23 @@ export const Schedules: React.FC = () => {
                       validateSchedule(editingSchedule.id);
                       setShowAddModal(false);
                     }}
-                    className="px-6 py-4 rounded-2xl bg-[#001D4A] text-white font-bold hover:bg-[#00215E] transition-all flex items-center justify-center gap-2"
+                    className="px-4 py-2.5 rounded-xl bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] transition-all flex items-center justify-center gap-2"
                   >
-                     Valider la demande
+                     Valider
                   </button>
                 )}
                 <div className="flex-grow" />
                 <button 
                   onClick={() => setShowAddModal(false)}
-                  className="px-6 py-4 rounded-2xl border border-border text-text-dark font-bold hover:bg-bg-light transition-all"
+                  className="px-4 py-2.5 rounded-xl border border-border text-text-dark text-xs font-bold hover:bg-bg-light transition-all"
                 >
                   Annuler
                 </button>
                 <button 
                   onClick={saveAssignment}
-                  className="px-8 py-4 rounded-2xl bg-[#001D4A] text-white font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/20 transition-all flex items-center justify-center gap-2"
+                  className="px-6 py-2.5 rounded-xl bg-[#001D4A] text-white text-xs font-bold hover:bg-[#00215E] shadow-lg shadow-[#001D4A]/10 transition-all flex items-center justify-center gap-2"
                 >
-                  <Check size={20} />
+                  <Check size={16} />
                   Enregistrer
                 </button>
               </div>
