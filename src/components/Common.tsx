@@ -95,6 +95,12 @@ export const Navbar = () => {
               </Link>
             );
           })}
+          <Link 
+            to="/login"
+            className="ml-4 bg-secondary text-white px-6 py-2 rounded-full text-xs font-bold hover:bg-secondary/90 transition-all shadow-lg shadow-secondary/10"
+          >
+            Connexion
+          </Link>
         </div>
 
         {/* Search */}
@@ -221,6 +227,13 @@ export const Navbar = () => {
                           </Link>
                         );
                       })}
+                      <Link
+                        to="/login"
+                        className="flex items-center justify-between rounded-2xl p-4 bg-secondary font-bold text-white shadow-lg shadow-secondary/10 mt-4"
+                      >
+                        Connexion
+                        <ChevronRight size={18} className="opacity-100" />
+                      </Link>
                     </div>
                   </div>
 
