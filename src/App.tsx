@@ -19,6 +19,8 @@ import { Teachers } from './pages/admin/Teachers';
 import { Schedules } from './pages/admin/Schedules';
 import { Classes } from './pages/admin/Classes';
 import { Subjects } from './pages/admin/Subjects';
+import { Settings } from './pages/admin/Settings';
+import { NotificationsPage } from './pages/admin/Notifications';
 import { DashboardLayout } from './components/DashboardLayout';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { DataProvider } from './lib/DataContext';
@@ -72,6 +74,8 @@ export default function App() {
             <Route path="/admin/classes" element={<PrivateRoute><Classes /></PrivateRoute>} />
             <Route path="/admin/subjects" element={<PrivateRoute><Subjects /></PrivateRoute>} />
             <Route path="/admin/schedules" element={<PrivateRoute><Schedules /></PrivateRoute>} />
+            <Route path="/admin/notifications" element={<PrivateRoute><NotificationsPage /></PrivateRoute>} />
+            <Route path="/admin/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
             {/* We can add more admin routes here as they are created */}
             <Route path="/admin/:any" element={<PrivateRoute><div className="flex flex-col items-center justify-center min-h-[400px] text-text-muted">Page en cours de développement...</div></PrivateRoute>} />
           </Routes>

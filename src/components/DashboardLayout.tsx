@@ -16,11 +16,10 @@ import {
   Menu,
   X,
   User as UserIcon,
-  Filter
 } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useData } from '../lib/DataContext';
-import { UserRole, Level } from '../data';
+import { UserRole } from '../data';
 
 interface SidebarItem {
   name: string;
@@ -36,6 +35,7 @@ const sidebarItems: SidebarItem[] = [
   { name: 'Classes', path: '/admin/classes', icon: School, roles: [UserRole.ADMIN] },
   { name: 'Matières', path: '/admin/subjects', icon: BookOpen, roles: [UserRole.ADMIN] },
   { name: 'Emplois du temps', path: '/admin/schedules', icon: Calendar, roles: [UserRole.ADMIN, UserRole.TEACHER] },
+  { name: 'Notifications', path: '/admin/notifications', icon: Bell, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Paramètres', path: '/admin/settings', icon: Settings, roles: [UserRole.ADMIN, UserRole.TEACHER] },
 ];
 
@@ -45,12 +45,31 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [level, setLevel] = useState<Level>(Level.LICENCE);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
+
+  // Handle window resize for sidebar
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsSidebarOpen(window.innerWidth >= 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const { notifications, markAllAsRead, clearNotification } = useData();
   const [showNotifications, setShowNotifications] = useState(false);
-  const unreadCount = notifications.filter(n => !n.read).length;
+
+  // Filter notifications based on user role and target user ID
+  const relevantNotifications = notifications.filter(n => {
+    // If Admin, show everything targeting Admin role or having no specific target
+    if (user.role === UserRole.ADMIN) {
+      return !n.targetRole || n.targetRole === UserRole.ADMIN || n.targetUserId === user.id;
+    }
+    // If Teacher, show notifications targeting them specifically
+    return n.targetUserId === user.id;
+  });
+
+  const unreadCount = relevantNotifications.filter(n => !n.read).length;
 
   if (!user) {
     navigate('/login');
@@ -60,13 +79,29 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const filteredItems = sidebarItems.filter(item => item.roles.includes(user.role));
 
   return (
-    <div className="min-h-screen bg-bg-light flex">
+    <div className="min-h-screen bg-bg-light flex relative">
+      {/* Sidebar Overlay for Mobile */}
+      <AnimatePresence>
+        {isSidebarOpen && window.innerWidth < 1024 && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
       <motion.aside 
         initial={false}
-        animate={{ width: isSidebarOpen ? 280 : 80 }}
-        transition={{ type: 'spring', damping: 20, stiffness: 150 }}
-        className="bg-secondary text-white flex flex-col fixed h-full z-50 shadow-xl"
+        animate={{ 
+          width: isSidebarOpen ? 280 : 80,
+          x: isSidebarOpen || window.innerWidth >= 1024 ? 0 : -280
+        }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        className={`bg-secondary text-white flex flex-col fixed h-full z-[60] shadow-xl md:shadow-none lg:shadow-xl transition-all duration-300`}
       >
         <div className={`p-6 flex items-center transition-all duration-300 ${isSidebarOpen ? 'justify-start overflow-hidden' : 'justify-center'}`}>
           <img 
@@ -83,6 +118,9 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               <Link 
                 key={item.path}
                 to={item.path}
+                onClick={() => {
+                  if (window.innerWidth < 1024) setIsSidebarOpen(false);
+                }}
                 className={`flex items-center gap-4 p-3 rounded-xl transition-all ${
                   isActive 
                     ? 'bg-accent text-white shadow-lg shadow-accent/20' 
@@ -90,7 +128,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                 }`}
               >
                 <item.icon size={20} />
-                {isSidebarOpen && (
+                {(isSidebarOpen || window.innerWidth < 1024) && (
                   <motion.span 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -110,7 +148,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
             className="flex items-center gap-4 w-full p-3 rounded-xl text-white/60 hover:bg-error/10 hover:text-error transition-all"
           >
             <LogOut size={20} />
-            {isSidebarOpen && <span className="font-medium">Déconnexion</span>}
+            {(isSidebarOpen || window.innerWidth < 1024) && <span className="font-medium">Déconnexion</span>}
           </button>
         </div>
       </motion.aside>
@@ -118,12 +156,14 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       {/* Main Content */}
       <motion.main 
         initial={false}
-        animate={{ marginLeft: isSidebarOpen ? 280 : 80 }}
-        transition={{ type: 'spring', damping: 20, stiffness: 150 }}
-        className="flex-grow min-h-screen"
+        animate={{ 
+          marginLeft: window.innerWidth >= 1024 ? (isSidebarOpen ? 280 : 80) : 0 
+        }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        className="flex-grow min-h-screen relative w-full"
       >
         {/* Top Header */}
-        <header className="h-20 bg-white border-b border-border px-8 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-md">
+        <header className="h-20 bg-white border-b border-border px-4 sm:px-8 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-md">
           <div className="flex items-center gap-6">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -131,24 +171,6 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
             >
               {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-
-            <div className="relative group">
-              <div className="flex items-center gap-3 bg-bg-light px-4 py-2 rounded-xl group-hover:bg-border/50 transition-colors cursor-pointer">
-                <span className="text-sm font-semibold text-text-dark">Niveau : {level}</span>
-                <ChevronDown size={16} className="text-text-muted" />
-              </div>
-              <div className="absolute top-full left-0 mt-2 w-40 bg-white border border-border rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all py-2 z-50">
-                {Object.values(Level).map((l) => (
-                  <button 
-                    key={l}
-                    onClick={() => setLevel(l)}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-bg-light text-text-dark font-medium"
-                  >
-                    {l}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
 
           <div className="flex items-center gap-6">
@@ -179,31 +201,29 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute right-0 mt-3 w-80 bg-white border border-border shadow-2xl rounded-3xl py-4 z-50 max-h-[400px] flex flex-col"
+                      className="absolute right-0 mt-3 w-80 bg-white border border-border shadow-2xl rounded-3xl py-4 z-50 max-h-[440px] flex flex-col"
                     >
                       <div className="px-6 mb-4 flex items-center justify-between">
-                        <h4 className="font-bold text-text-dark">Notifications</h4>
-                        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{notifications.length} au total</span>
+                        <h4 className="font-bold text-text-dark">Notifications non lues</h4>
+                        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{unreadCount}</span>
                       </div>
                       
                       <div className="flex-grow overflow-y-auto px-2 space-y-1">
-                        {notifications.length === 0 ? (
+                        {unreadCount === 0 ? (
                           <div className="py-8 text-center text-text-muted">
                             <Bell size={32} className="mx-auto mb-2 opacity-20" />
-                            <p className="text-xs font-medium">Aucune notification</p>
+                            <p className="text-xs font-medium">Aucune nouvelle alerte</p>
                           </div>
                         ) : (
-                          notifications.map((n) => (
+                          relevantNotifications.filter(n => !n.read).map((n) => (
                             <div 
                               key={n.id}
-                              className={`p-3 rounded-2xl transition-colors relative group ${
-                                n.read ? 'hover:bg-bg-light' : 'bg-[#001D4A]/5 hover:bg-[#001D4A]/10'
-                              }`}
+                              className="p-3 rounded-2xl transition-colors relative group bg-[#001D4A]/5 hover:bg-[#001D4A]/10"
                             >
                               <div className="flex gap-3">
                                 <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${
                                   n.type === 'error' ? 'bg-error' : 
-                                  n.type === 'warning' ? 'bg-orange-500' : 'bg-emerald-500'
+                                  n.type === 'warning' ? 'bg-orange-500' : 'bg-blue-500'
                                 }`} />
                                 <div className="space-y-0.5">
                                   <p className="text-xs font-bold text-text-dark leading-tight">{n.title}</p>
@@ -211,18 +231,20 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                                   <p className="text-[9px] font-medium text-text-muted mt-1">{n.time}</p>
                                 </div>
                               </div>
-                              <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  clearNotification(n.id);
-                                }}
-                                className="absolute top-2 right-2 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white rounded-lg text-text-muted hover:text-error"
-                              >
-                                <X size={12} />
-                              </button>
                             </div>
                           ))
                         )}
+                      </div>
+                      <div className="mt-4 px-4 pt-4 border-t border-border">
+                        <button 
+                          onClick={() => {
+                            setShowNotifications(false);
+                            navigate('/admin/notifications');
+                          }}
+                          className="w-full py-3 bg-bg-light hover:bg-[#001D4A]/5 rounded-2xl text-xs font-bold text-[#001D4A] transition-all"
+                        >
+                          Voir tout l'historique
+                        </button>
                       </div>
                     </motion.div>
                   </>

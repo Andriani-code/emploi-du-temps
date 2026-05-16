@@ -6,6 +6,7 @@ import {
   Class, 
   Subject,
   AppNotification,
+  UserRole,
   MOCK_SCHEDULES,
   MOCK_ROOMS,
   MOCK_TEACHERS,
@@ -39,6 +40,7 @@ interface DataContextType {
   cancelScheduleChange: (scheduleId: string) => void;
   validateSchedule: (scheduleId: string) => void;
   clearNotification: (id: string) => void;
+  clearNotifications: (ids: string[]) => void;
   markAllAsRead: () => void;
 }
 
@@ -136,7 +138,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
               message: `La salle ${room?.name} est occupée par deux cours en même temps.`,
               time: 'Système',
               read: false,
-              relatedId: s1.id
+              relatedId: s1.id,
+              targetRole: UserRole.ADMIN
             });
           }
           if (s1.teacherId === s2.teacherId) {
@@ -148,7 +151,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
               message: `${teacher?.name} a deux cours programmés simultanément.`,
               time: 'Système',
               read: false,
-              relatedId: s1.id
+              relatedId: s1.id,
+              targetRole: UserRole.ADMIN
             });
           }
         }
@@ -214,7 +218,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateSchedule = (id: string, updates: Partial<Schedule>) => {
+    const prev = schedules.find(s => s.id === id);
     setSchedules(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+    
+    if (prev && updates.teacherId && updates.teacherId !== prev.teacherId) {
+      const subject = subjects.find(s => s.id === prev.subjectId);
+      addNotification({
+        type: 'info',
+        title: 'Nouvelle affectation',
+        message: `Vous avez été affecté au cours de ${subject?.name}.`,
+        targetUserId: updates.teacherId,
+        relatedId: id
+      });
+    }
   };
 
   const deleteSchedule = (id: string) => {
@@ -223,6 +239,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addSchedule = (schedule: Schedule) => {
     setSchedules(prev => [...prev, schedule]);
+    
+    const subject = subjects.find(s => s.id === schedule.subjectId);
+    addNotification({
+      type: 'info',
+      title: 'Nouvelle affectation',
+      message: `Vous avez été affecté au cours de ${subject?.name}.`,
+      targetUserId: schedule.teacherId,
+      relatedId: schedule.id
+    });
   };
 
   const requestScheduleChange = (scheduleId: string, newDay: number, newStartTime: string, newEndTime: string) => {
@@ -237,7 +262,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       type: 'warning',
       title: 'Demande de modification',
       message: `${teacher?.name} a demandé un changement pour le cours de ${subject?.name} (${cls?.name} ${cls?.mention}).`,
-      relatedId: scheduleId
+      relatedId: scheduleId,
+      targetRole: UserRole.ADMIN
     });
 
     setSchedules(prev => prev.map(s => s.id === scheduleId ? { 
@@ -271,6 +297,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const validateSchedule = (scheduleId: string) => {
+    const current = schedules.find(s => s.id === scheduleId);
     setSchedules(prev => prev.map(s => s.id === scheduleId ? { 
       ...s, 
       status: 'validated',
@@ -279,16 +306,24 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       originalEndTime: undefined,
     } : s));
 
-    addNotification({
-      type: 'success',
-      title: 'Changement validé',
-      message: 'Un nouveau créneau a été approuvé par l\'administration.',
-      relatedId: scheduleId
-    });
+    if (current) {
+      addNotification({
+        type: 'success',
+        title: 'Changement validé',
+        message: 'Un nouveau créneau a été approuvé par l\'administration.',
+        relatedId: scheduleId,
+        targetUserId: current.teacherId
+      });
+    }
   };
 
   const clearNotification = (id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  const clearNotifications = (ids: string[]) => {
+    const idSet = new Set(ids);
+    setNotifications(prev => prev.filter(n => !idSet.has(n.id)));
   };
 
   const markAllAsRead = () => {
@@ -322,6 +357,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       cancelScheduleChange,
       validateSchedule,
       clearNotification,
+      clearNotifications,
       markAllAsRead
     }}>
       {children}

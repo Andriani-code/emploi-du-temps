@@ -68,6 +68,8 @@ export interface AppNotification {
   time: string;
   read: boolean;
   relatedId?: string; // id of the schedule or other entity
+  targetRole?: UserRole;
+  targetUserId?: string;
 }
 
 export const MOCK_USERS: User[] = [

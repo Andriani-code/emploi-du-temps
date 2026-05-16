@@ -131,7 +131,7 @@ const DraggableSchedule: React.FC<DraggableScheduleProps> = ({ schedule, isMySlo
             </h4>
           </div>
           {schedule.status === 'validated' ? (
-            <CheckCircle2 size={12} className={`${!(isMySlot || isAdmin) ? 'text-text-muted' : 'text-emerald-600'} shrink-0`} />
+            <CheckCircle2 size={12} className={`${!(isMySlot || isAdmin) ? 'text-text-muted' : 'text-blue-600'} shrink-0`} />
           ) : (
             <div className="flex items-center gap-1">
               <AlertCircle size={12} className="text-orange-500 shrink-0 animate-pulse" />
@@ -154,7 +154,7 @@ const DraggableSchedule: React.FC<DraggableScheduleProps> = ({ schedule, isMySlo
       </div>
       <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-black/5">
         <span className={`text-[8px] font-bold uppercase tracking-wider ${
-          !(isMySlot || isAdmin) ? 'text-text-muted' : schedule.status === 'validated' ? 'text-emerald-700' : 'text-orange-700'
+          !(isMySlot || isAdmin) ? 'text-text-muted' : schedule.status === 'validated' ? 'text-blue-700' : 'text-orange-700'
         }`}>
           {schedule.status === 'pending' ? 'Attente' : schedule.startTime}
         </span>
@@ -390,7 +390,7 @@ export const Schedules: React.FC = () => {
       addSchedule({
         ...newAssignment as Schedule,
         id: `sch-${Date.now()}`,
-        classId: selectedClassId
+        classId: selectedClassId as string
       });
     }
     setShowAddModal(false);
@@ -742,7 +742,7 @@ export const Schedules: React.FC = () => {
                       validateSchedule(editingSchedule.id);
                       setShowAddModal(false);
                     }}
-                    className="px-6 py-4 rounded-2xl bg-emerald-500 text-white font-bold hover:bg-emerald-600 transition-all flex items-center justify-center gap-2"
+                    className="px-6 py-4 rounded-2xl bg-[#001D4A] text-white font-bold hover:bg-[#00215E] transition-all flex items-center justify-center gap-2"
                   >
                      Valider la demande
                   </button>

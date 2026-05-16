@@ -28,13 +28,13 @@ export const AdminDashboard: React.FC = () => {
 
   const stats = isAdmin ? [
     { label: 'Salles', value: rooms.length, icon: DoorOpen, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Enseignants', value: teachers.length, icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Enseignants', value: teachers.length, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
     { label: 'Classes', value: classes.length, icon: School, color: 'text-purple-600', bg: 'bg-purple-50' },
     { label: 'Cours', value: subjects.length, icon: BookOpen, color: 'text-orange-600', bg: 'bg-orange-50' },
   ] : [
     { label: 'Mes Cours', value: schedules.filter(s => s.teacherId === teacherId).length, icon: BookOpen, color: 'text-orange-600', bg: 'bg-orange-50' },
     { label: 'Heures / Semaine', value: schedules.filter(s => s.teacherId === teacherId).length * 2, icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Salles occupées', value: rooms.length, icon: DoorOpen, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Salles occupées', value: rooms.length, icon: DoorOpen, color: 'text-blue-600', bg: 'bg-blue-50' },
     { label: 'Notifications', value: 2, icon: Bell, color: 'text-purple-600', bg: 'bg-purple-50' },
   ];
 
@@ -76,7 +76,7 @@ export const AdminDashboard: React.FC = () => {
                 <stat.icon size={24} />
               </div>
             </div>
-            <div className="mt-6 flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 w-fit px-2 py-1 rounded-lg">
+            <div className="mt-6 flex items-center gap-2 text-xs font-bold text-blue-600 bg-blue-50 w-fit px-2 py-1 rounded-lg">
               <TrendingUp size={12} />
               +2 cette semaine
             </div>
@@ -148,7 +148,7 @@ export const AdminDashboard: React.FC = () => {
               {notifications.map((notif) => (
                 <div key={notif.id} className="p-6 flex items-start gap-4 hover:bg-bg-light transition-colors">
                   <div className={`mt-1 p-2 rounded-xl border ${
-                    notif.type === 'success' ? 'bg-emerald-50 border-emerald-100 text-emerald-600' :
+                    notif.type === 'success' ? 'bg-blue-50 border-blue-100 text-blue-600' :
                     notif.type === 'warning' ? 'bg-orange-50 border-orange-100 text-orange-600' :
                     'bg-error/5 border-error/10 text-error'
                   }`}>

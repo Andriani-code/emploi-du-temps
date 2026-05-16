@@ -33,7 +33,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const teacherAccount = teachers.find(t => t.email === email);
     
     if (teacherAccount) {
-      if (teacherAccount.password === password) {
+      // If no password set in legacy data, allow 'password123'
+      const validPassword = teacherAccount.password || 'password123';
+      
+      if (validPassword === password) {
         const teacherUser: User = {
           id: teacherAccount.id,
           name: teacherAccount.name,
