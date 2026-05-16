@@ -16,6 +16,8 @@ import {
   Menu,
   X,
   User as UserIcon,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useData } from '../lib/DataContext';
@@ -46,6 +48,13 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const location = useLocation();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+
+  const toggleDarkMode = () => {
+    const newVal = !isDarkMode;
+    setIsDarkMode(newVal);
+    localStorage.setItem('darkMode', String(newVal));
+  };
 
   // Handle window resize for sidebar
   React.useEffect(() => {
@@ -79,7 +88,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const filteredItems = sidebarItems.filter(item => item.roles.includes(user.role));
 
   return (
-    <div className="min-h-screen bg-bg-light flex relative">
+    <div className={`min-h-screen flex relative selection:bg-primary/20 ${isDarkMode ? 'dark bg-bg-dark-content' : 'bg-bg-light'}`}>
       {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
         {isSidebarOpen && window.innerWidth < 1024 && (
@@ -100,14 +109,14 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
           width: isSidebarOpen ? 280 : 80,
           x: isSidebarOpen || window.innerWidth >= 1024 ? 0 : -280
         }}
-        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        className={`bg-secondary text-white flex flex-col fixed h-full z-[60] shadow-xl md:shadow-none lg:shadow-xl transition-all duration-300`}
+        transition={{ type: 'spring', damping: 20, stiffness: 300, mass: 0.8 }}
+        className={`bg-secondary dark:bg-bg-dark-sidebar text-white flex flex-col fixed h-full z-[60] shadow-xl md:shadow-none lg:shadow-xl`}
       >
-        <div className={`p-4 flex items-center transition-all duration-300 ${isSidebarOpen ? 'justify-start overflow-hidden' : 'justify-center'}`}>
+        <div className={`p-4 flex items-center transition-all ${isSidebarOpen ? 'justify-start overflow-hidden' : 'justify-center'}`}>
           <img 
             src={logo} 
             alt="EMIT" 
-            className={`w-8 h-8 object-contain brightness-0 invert transition-transform duration-300 ${isSidebarOpen ? 'scale-110' : 'scale-100'}`} 
+            className={`w-8 h-8 object-contain brightness-0 invert transition-transform ${isSidebarOpen ? 'scale-110' : 'scale-100'}`} 
           />
         </div>
 
@@ -159,32 +168,40 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         animate={{ 
           marginLeft: window.innerWidth >= 1024 ? (isSidebarOpen ? 280 : 80) : 0 
         }}
-        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        transition={{ type: 'spring', damping: 20, stiffness: 300, mass: 0.8 }}
         className="flex-grow min-h-screen relative w-full"
       >
         {/* Top Header */}
-        <header className="h-16 bg-white border-b border-border px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-md">
+        <header className="h-16 bg-white dark:bg-bg-dark-content border-b border-border dark:border-border-dark px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 bg-white/80 dark:bg-bg-dark-content/80 backdrop-blur-md transition-colors">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-1.5 hover:bg-bg-light rounded-lg transition-colors text-text-muted"
+              className="p-1.5 hover:bg-bg-light dark:hover:bg-white/5 rounded-lg transition-colors text-text-muted dark:text-text-dark-muted"
             >
               {isSidebarOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
 
           <div className="flex items-center gap-4">
+            <button 
+              onClick={toggleDarkMode}
+              className="p-1.5 text-text-muted hover:text-[#001D4A] dark:hover:text-blue-400 transition-colors"
+              title={isDarkMode ? "Passer au mode clair" : "Passer au mode sombre"}
+            >
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+
             <div className="relative">
               <button 
                 onClick={() => {
                   setShowNotifications(!showNotifications);
                   if (!showNotifications) markAllAsRead();
                 }}
-                className="relative p-1.5 text-text-muted hover:text-[#001D4A] transition-colors"
+                className="relative p-1.5 text-text-muted dark:text-text-dark-muted hover:text-[#001D4A] dark:hover:text-blue-400 transition-colors"
               >
                 <Bell size={18} />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-error rounded-full border-2 border-white flex items-center justify-center text-[7px] font-bold text-white">
+                  <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-error rounded-full border-2 border-white dark:border-bg-dark-content flex items-center justify-center text-[7px] font-bold text-white">
                     {unreadCount}
                   </span>
                 )}
@@ -201,16 +218,16 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute right-0 mt-3 w-80 bg-white border border-border shadow-2xl rounded-3xl py-4 z-50 max-h-[440px] flex flex-col"
+                      className="absolute right-0 mt-3 w-80 bg-white dark:bg-bg-dark-card border border-border dark:border-border-dark shadow-2xl rounded-2xl py-4 z-50 max-h-[440px] flex flex-col transition-colors"
                     >
                       <div className="px-6 mb-4 flex items-center justify-between">
-                        <h4 className="font-bold text-text-dark">Notifications non lues</h4>
-                        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{unreadCount}</span>
+                        <h4 className="font-bold text-text-dark dark:text-text-dark-light">Notifications non lues</h4>
+                        <span className="text-[10px] font-bold text-text-muted dark:text-text-dark-muted uppercase tracking-wider">{unreadCount}</span>
                       </div>
                       
                       <div className="flex-grow overflow-y-auto px-2 space-y-1">
                         {unreadCount === 0 ? (
-                          <div className="py-8 text-center text-text-muted">
+                          <div className="py-8 text-center text-text-muted dark:text-text-dark-muted">
                             <Bell size={32} className="mx-auto mb-2 opacity-20" />
                             <p className="text-xs font-medium">Aucune nouvelle alerte</p>
                           </div>
@@ -218,7 +235,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                           relevantNotifications.filter(n => !n.read).map((n) => (
                             <div 
                               key={n.id}
-                              className="p-3 rounded-2xl transition-colors relative group bg-[#001D4A]/5 hover:bg-[#001D4A]/10"
+                              className="p-3 rounded-2xl transition-colors relative group bg-[#001D4A]/5 dark:bg-white/5 hover:bg-[#001D4A]/10 dark:hover:bg-white/10"
                             >
                               <div className="flex gap-3">
                                 <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${
@@ -226,22 +243,22 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                                   n.type === 'warning' ? 'bg-orange-500' : 'bg-blue-500'
                                 }`} />
                                 <div className="space-y-0.5">
-                                  <p className="text-xs font-bold text-text-dark leading-tight">{n.title}</p>
-                                  <p className="text-[10px] text-text-muted leading-relaxed line-clamp-2">{n.message}</p>
-                                  <p className="text-[9px] font-medium text-text-muted mt-1">{n.time}</p>
+                                  <p className="text-xs font-bold text-text-dark dark:text-text-dark-light leading-tight">{n.title}</p>
+                                  <p className="text-[10px] text-text-muted dark:text-text-dark-muted leading-relaxed line-clamp-2">{n.message}</p>
+                                  <p className="text-[9px] font-medium text-text-muted dark:text-text-dark-muted mt-1">{n.time}</p>
                                 </div>
                               </div>
                             </div>
                           ))
                         )}
                       </div>
-                      <div className="mt-4 px-4 pt-4 border-t border-border">
+                      <div className="mt-4 px-4 pt-4 border-t border-border dark:border-border-dark">
                         <button 
                           onClick={() => {
                             setShowNotifications(false);
                             navigate('/admin/notifications');
                           }}
-                          className="w-full py-3 bg-bg-light hover:bg-[#001D4A]/5 rounded-2xl text-xs font-bold text-[#001D4A] transition-all"
+                          className="w-full py-3 bg-bg-light dark:bg-white/5 hover:bg-[#001D4A]/5 dark:hover:bg-white/10 rounded-2xl text-xs font-bold text-[#001D4A] dark:text-blue-400 transition-all"
                         >
                           Voir tout l'historique
                         </button>
@@ -252,12 +269,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               </AnimatePresence>
             </div>
 
-            <div className="flex items-center gap-3 pl-4 border-l border-border">
+            <div className="flex items-center gap-3 pl-4 border-l border-border dark:border-border-dark transition-colors">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-bold text-text-dark">{user.name}</p>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{user.role}</p>
+                <p className="text-sm font-bold text-text-dark dark:text-text-dark-light">{user.name}</p>
+                <p className="text-[10px] font-bold text-text-muted dark:text-text-dark-muted uppercase tracking-wider">{user.role}</p>
               </div>
-              <div className="w-9 h-9 bg-bg-light rounded-full border border-border flex items-center justify-center text-primary overflow-hidden">
+              <div className="w-9 h-9 bg-bg-light dark:bg-white/5 rounded-full border border-border dark:border-border-dark flex items-center justify-center text-primary dark:text-blue-400 overflow-hidden text-sm transition-colors">
                 {user.avatar ? (
                   <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                 ) : (

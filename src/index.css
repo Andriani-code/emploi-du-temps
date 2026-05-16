@@ -17,6 +17,14 @@
   --color-text-dark: #111827;
   --color-text-muted: #6B7280;
 
+  /* Dark mode colors overrides */
+  --color-bg-dark-sidebar: #050E1F;
+  --color-bg-dark-content: #0B1424;
+  --color-bg-dark-card: #151F32;
+  --color-border-dark: #222F43;
+  --color-text-dark-light: #F1F5F9;
+  --color-text-dark-muted: #94A3B8;
+
   /* Hex fallbacks for html2canvas */
   --color-blue-50: #eff6ff;
   --color-blue-200: #bfdbfe;
@@ -41,9 +49,41 @@
   --radius-3xl: 20px;
 }
 
+@variant dark (&:where(.dark, .dark *));
+
 @layer base {
+  .dark {
+    color-scheme: dark;
+    --color-bg-light: var(--color-bg-dark-content);
+    --color-border: var(--color-border-dark);
+    --color-text-dark: var(--color-text-dark-light);
+    --color-text-muted: var(--color-text-dark-muted);
+    
+    /* Global overrides for common hardcoded classes */
+    .bg-white {
+      background-color: var(--color-bg-dark-card) !important;
+      color: var(--color-text-dark-light) !important;
+    }
+    
+    header.bg-white\/80 {
+      background-color: rgb(11 20 36 / 0.8) !important;
+    }
+
+    .bg-slate-50\/50 {
+      background-color: rgb(255 255 255 / 0.02) !important;
+    }
+
+    input.bg-white, select.bg-white, textarea.bg-white {
+      background-color: var(--color-bg-dark-content) !important;
+    }
+    
+    input, select, textarea {
+      color: var(--color-text-dark-light);
+    }
+  }
+
   html, body {
-    @apply font-sans bg-white text-text-dark antialiased selection:bg-primary/10 selection:text-primary;
+    @apply font-sans bg-white dark:bg-bg-dark-content text-text-dark dark:text-text-dark-light antialiased selection:bg-primary/10 selection:text-primary transition-colors;
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -55,7 +95,7 @@
   }
   
   h1, h2, h3, h4 {
-    @apply font-display tracking-tight text-text-dark;
+    @apply font-display tracking-tight text-text-dark dark:text-text-dark-light transition-colors;
   }
 }
 

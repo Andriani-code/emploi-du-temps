@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Mail, Lock, LogIn, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
@@ -45,9 +45,9 @@ export const Login: React.FC = () => {
         {/* Top Branding */}
         <div className="relative z-10">
           <div className="flex items-center gap-5 mb-16">
-            <div className="p-1 bg-white/10 rounded-xl backdrop-blur-md">
+            <Link to="/" className="p-1 bg-white/10 rounded-xl backdrop-blur-md hover:bg-white/20 transition-colors">
               <img src={logo} alt="EMIT" className="w-12 h-12 object-contain brightness-0 invert" />
-            </div>
+            </Link>
             <div className="text-white">
               <h2 className="text-2xl font-display font-bold tracking-tight">EMIT</h2>
               <p className="text-[10px] font-medium opacity-70 leading-tight max-w-[200px]">
@@ -83,13 +83,13 @@ export const Login: React.FC = () => {
           className="w-full max-w-sm"
         >
           {/* Logo mobile version */}
-          <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
+          <Link to="/" className="lg:hidden flex items-center justify-center gap-3 mb-8 hover:opacity-80 transition-opacity">
             <img src={logo} alt="EMIT" className="w-10 h-10 object-contain" />
             <div className="text-text-dark text-left">
               <h2 className="text-xl font-bold tracking-tight">EMIT</h2>
               <p className="text-[8px] font-medium opacity-60 uppercase">École de Management</p>
             </div>
-          </div>
+          </Link>
  
           <div className="text-center mb-8">
             <h1 className="text-3xl font-display font-bold text-[#00215E] mb-1">Connexion</h1>

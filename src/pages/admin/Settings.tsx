@@ -200,7 +200,7 @@ export const Settings: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 overflow-hidden"
+              className="relative w-full max-w-md bg-white rounded-[12px] shadow-2xl p-6 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-display font-bold text-text-dark">Modifier l'Email</h3>
@@ -247,7 +247,7 @@ export const Settings: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 overflow-hidden"
+              className="relative w-full max-w-md bg-white rounded-[12px] shadow-2xl p-6 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-display font-bold text-text-dark">Modifier le Mot de Passe</h3>

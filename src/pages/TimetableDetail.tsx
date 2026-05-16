@@ -17,12 +17,12 @@ import { MOCK_CLASSES } from './Timetable';
 const CourseBlock = React.memo(({ subject, teacher, room, color }: any) => {
   const getBgColor = (c: string) => {
     switch(c) {
-      case 'blue': return 'bg-blue-50 border-blue-200 text-blue-700';
-      case 'purple': return 'bg-purple-50 border-purple-200 text-purple-700';
-      case 'orange': return 'bg-orange-50 border-orange-200 text-orange-700';
-      case 'indigo': return 'bg-indigo-50 border-indigo-200 text-indigo-700';
-      case 'rose': return 'bg-rose-50 border-rose-200 text-rose-700';
-      default: return 'bg-slate-50 border-slate-200 text-slate-700';
+      case 'blue': return 'bg-[#eff6ff] border-[#bfdbfe] text-[#1d4ed8]';
+      case 'purple': return 'bg-[#faf5ff] border-[#e9d5ff] text-[#7e22ce]';
+      case 'orange': return 'bg-[#fff7ed] border-[#fed7aa] text-[#c2410c]';
+      case 'indigo': return 'bg-[#eef2ff] border-[#c7d2fe] text-[#4338ca]';
+      case 'rose': return 'bg-[#fff1f2] border-[#fecdd3] text-[#be123c]';
+      default: return 'bg-[#f8fafc] border-[#e2e8f0] text-[#334155]';
     }
   };
 
@@ -44,8 +44,8 @@ const CourseBlock = React.memo(({ subject, teacher, room, color }: any) => {
 });
 
 const TimeSlot = React.memo(({ time }: any) => (
-  <div className="h-40 border-b border-border flex items-center justify-center bg-bg-light/50">
-    <div className="flex flex-col items-center gap-1 text-text-muted">
+  <div className="h-40 border-b border-[#E5E7EB] flex items-center justify-center bg-[#F8FAFC]/50">
+    <div className="flex flex-col items-center gap-1 text-[#6B7280]">
       <Clock size={16} />
       <span className="text-xs font-bold">{time}</span>
     </div>
@@ -330,25 +330,25 @@ export const TimetableDetail = () => {
 
         <div 
           ref={timetableRef}
-          className="bg-white border border-border rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 overflow-x-auto p-4 no-scrollbar"
+          className="bg-[#ffffff] border border-[#E5E7EB] rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 overflow-x-auto p-4 no-scrollbar"
         >
-          <div className="min-w-[1000px] bg-white">
+          <div className="min-w-[1000px] bg-[#ffffff] text-[#111827]">
             {/* Header for PDF */}
             <div className="hidden show-on-export mb-8 p-4 border-b-2 border-primary flex justify-between items-end">
               <div>
-                <h2 className="text-2xl font-bold text-text-dark">{classInfo.level} {classInfo.mention}</h2>
-                <p className="text-sm text-text-muted">{classInfo.parcours} — {classInfo.year}</p>
+                <h2 className="text-2xl font-bold text-[#111827]">{classInfo.level} {classInfo.mention}</h2>
+                <p className="text-sm text-[#6B7280]">{classInfo.parcours} — {classInfo.year}</p>
               </div>
               <div className="text-right">
                 <p className="text-xs font-bold text-primary uppercase tracking-widest leading-none">EMIT</p>
-                <p className="text-[10px] text-text-muted mt-1">Généré le {new Date().toLocaleDateString()}</p>
+                <p className="text-[10px] text-[#6B7280] mt-1">Généré le {new Date().toLocaleDateString()}</p>
               </div>
             </div>
 
-            <div className="timetable-grid border-b border-border bg-slate-50/50">
+            <div className="timetable-grid border-b border-[#E5E7EB] bg-[#F8FAFC]/50">
               <div className="p-5"></div>
               {days.map(day => (
-                <div key={day} className="p-5 text-center text-xs font-bold text-text-muted uppercase tracking-widest border-l border-border">
+                <div key={day} className="p-5 text-center text-xs font-bold text-[#6B7280] uppercase tracking-widest border-l border-[#E5E7EB]">
                   {day}
                 </div>
               ))}
@@ -360,11 +360,11 @@ export const TimetableDetail = () => {
               </div>
 
               {days.map((day, dIdx) => (
-                <div key={day} className="flex flex-col border-l border-border">
+                <div key={day} className="flex flex-col border-l border-[#E5E7EB]">
                   {times.map((time, tIdx) => {
                     const course = getCourseAt(dIdx, tIdx);
                     return (
-                      <div key={time} className="h-40 border-b border-border p-2">
+                      <div key={time} className="h-40 border-b border-[#E5E7EB] p-2">
                         {course && (
                           <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -387,17 +387,17 @@ export const TimetableDetail = () => {
             </div>
 
             {/* Legend for PDF */}
-            <div className="hidden show-on-export mt-8 p-6 bg-bg-light/30 border border-border/50 rounded-2xl flex flex-wrap gap-8 justify-center">
+            <div className="hidden show-on-export mt-8 p-6 bg-[#F8FAFC]/30 border border-[#E5E7EB]/50 rounded-2xl flex flex-wrap gap-8 justify-center">
               {[
-                { label: 'Informatique', color: 'bg-blue-200' },
-                { label: 'Gestion', color: 'bg-rose-200' },
-                { label: 'Anglais', color: 'bg-orange-200' },
-                { label: 'Réseaux', color: 'bg-indigo-200' },
-                { label: 'Projets', color: 'bg-purple-200' },
+                { label: 'Informatique', color: 'bg-[#bfdbfe]' },
+                { label: 'Gestion', color: 'bg-[#fecdd3]' },
+                { label: 'Anglais', color: 'bg-[#fed7aa]' },
+                { label: 'Réseaux', color: 'bg-[#c7d2fe]' },
+                { label: 'Projets', color: 'bg-[#e9d5ff]' },
               ].map(item => (
                 <div key={item.label} className="flex items-center gap-2">
                   <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                  <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{item.label}</span>
+                  <span className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">{item.label}</span>
                 </div>
               ))}
             </div>
@@ -406,11 +406,11 @@ export const TimetableDetail = () => {
 
         <div className="mt-8 p-6 bg-bg-light border border-border rounded-xl flex flex-wrap gap-8 justify-center">
           {[
-            { label: 'Informatique', color: 'bg-blue-200' },
-            { label: 'Gestion', color: 'bg-rose-200' },
-            { label: 'Anglais', color: 'bg-orange-200' },
-            { label: 'Réseaux', color: 'bg-indigo-200' },
-            { label: 'Projets', color: 'bg-purple-200' },
+            { label: 'Informatique', color: 'bg-[#bfdbfe]' },
+            { label: 'Gestion', color: 'bg-[#fecdd3]' },
+            { label: 'Anglais', color: 'bg-[#fed7aa]' },
+            { label: 'Réseaux', color: 'bg-[#c7d2fe]' },
+            { label: 'Projets', color: 'bg-[#e9d5ff]' },
           ].map(item => (
             <div key={item.label} className="flex items-center gap-2">
               <div className={`w-2.5 h-2.5 rounded-full ${item.color}`}></div>

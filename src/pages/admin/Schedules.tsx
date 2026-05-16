@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import { 
   Plus, 
   Filter,
@@ -168,57 +170,62 @@ const OfficialView: React.FC<{
   schedules: Schedule[]; 
   rooms: Room[]; 
   teachers: Teacher[]; 
-  subjects: Subject[] 
-}> = ({ selectedClass, schedules, rooms, teachers, subjects }) => {
+  subjects: Subject[];
+  printRef?: React.Ref<HTMLDivElement>;
+}> = ({ selectedClass, schedules, rooms, teachers, subjects, printRef }) => {
   return (
-    <div className="bg-white p-12 shadow-2xl border border-border min-w-[1000px] font-serif print:p-0 print:shadow-none print:border-none">
+    <div ref={printRef} className="bg-[#ffffff] text-[#000000] p-12 shadow-2xl border border-[#E5E7EB] min-w-[1000px] font-serif print:p-0 print:shadow-none print:border-none">
       {/* Header */}
       <div className="space-y-4 mb-8">
         <div className="flex justify-between items-start">
           <div className="space-y-1">
-            <p className="text-sm font-bold uppercase">Mention : {selectedClass.mention}</p>
-            <p className="text-sm font-bold uppercase">Parcours : TRONC COMMUN</p>
-            <p className="text-sm font-bold uppercase">Niveau : {selectedClass.name}</p>
+            <p className="text-sm text-[#000000] font-bold uppercase">Mention : {selectedClass.mention}</p>
+            <p className="text-sm text-[#000000] font-bold uppercase">Parcours : TRONC COMMUN</p>
+            <p className="text-sm text-[#000000] font-bold uppercase">Niveau : {selectedClass.name}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm font-bold">ANNÉE UNIVERSITAIRE : 2025 - 2026</p>
-            <div className="mt-4 bg-[#001D4A] text-white px-4 py-2 font-bold text-sm inline-block">
+            <p className="text-sm text-[#000000] font-bold">ANNÉE UNIVERSITAIRE : 2025 - 2026</p>
+            <div className="mt-4 bg-[#001D4A] text-[#ffffff] px-4 py-2 font-bold text-sm inline-block">
               EMIT - {selectedClass.name}
             </div>
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-center underline tracking-[0.2em] mt-8">EMPLOI DU TEMPS</h2>
+        <h2 className="text-2xl text-[#000000] font-bold text-center underline tracking-[0.2em] mt-8">EMPLOI DU TEMPS</h2>
       </div>
 
       {/* Table */}
-      <div className="border-[1.5px] border-black overflow-hidden bg-white">
-        <div className="grid grid-cols-[150px_repeat(6,1fr)] bg-slate-50 border-b border-black">
-          <div className="p-3 border-r border-black font-bold text-center text-xs uppercase font-sans">Horaires</div>
+      <div className="border-[1.5px] border-[#000000] overflow-hidden bg-[#ffffff]">
+        <div className="grid grid-cols-[150px_repeat(6,1fr)] bg-[#f8fafc] border-b border-[#000000]">
+          <div className="p-3 border-r border-[#000000] text-[#000000] font-bold text-center text-xs uppercase font-sans">Horaires</div>
           {DAYS.map(day => (
-            <div key={day} className="p-3 border-r border-black last:border-none font-bold text-center text-xs uppercase font-sans">{day}</div>
+            <div key={day} className="p-3 border-r border-[#000000] text-[#000000] last:border-none font-bold text-center text-xs uppercase font-sans">{day}</div>
           ))}
         </div>
 
-        <div className="grid grid-cols-[150px_repeat(6,1fr)] div-body relative">
+        <div className="grid grid-cols-[150px_repeat(6,1fr)] div-body relative bg-[#ffffff]">
           {/* Background Grid Lines & Time Labels */}
-          {TIME_SLOTS.map((slot, sIdx) => (
+          {TIME_SLOTS.map((slot, sIdx) => {
+            const is12To13 = slot === '12:00 - 13:00';
+            const is13To14 = slot === '13:00 - 14:00';
+            
+            return (
             <React.Fragment key={slot}>
               <div 
-                className="p-2 border-r border-b border-black bg-slate-50 flex items-center justify-center font-mono font-bold text-[11px] text-center tracking-tight"
+                className={`p-2 border-r ${!is12To13 ? 'border-b' : ''} border-[#000000] flex items-center justify-center font-mono font-bold text-[11px] text-[#000000] text-center tracking-tight ${is12To13 || is13To14 ? 'bg-[#f1f5f9]' : 'bg-[#f8fafc]'}`}
                 style={{ gridRow: sIdx + 1, gridColumn: 1 }}
               >
-                {slot}
+                {is12To13 ? '12:00 - 14:00' : (is13To14 ? '' : slot)}
               </div>
               {/* Empty background cells to maintain border consistency */}
               {DAYS.map((_, dIdx) => (
                 <div 
                   key={`empty-${sIdx}-${dIdx}`} 
-                  className="border-r border-b border-black last:border-r-0"
+                  className={`border-r ${!is12To13 ? 'border-b' : ''} border-[#000000] last:border-r-0 ${is12To13 || is13To14 ? 'bg-[#f1f5f9]' : ''}`}
                   style={{ gridRow: sIdx + 1, gridColumn: dIdx + 2 }}
                 />
               ))}
             </React.Fragment>
-          ))}
+          )})}
 
           {/* Actual Schedules placed on top */}
           {schedules
@@ -229,27 +236,27 @@ const OfficialView: React.FC<{
               const rowSpan = endIdx !== -1 && startIdx !== -1 ? endIdx - startIdx + 1 : 1;
 
               const colorClasses = [
-                'bg-pink-100', 'bg-blue-100', 'bg-emerald-100', 'bg-orange-100', 
-                'bg-purple-100', 'bg-yellow-100', 'bg-cyan-100'
+                'bg-[#fce7f3]', 'bg-[#dbeafe]', 'bg-[#d1fae5]', 'bg-[#ffedd5]', 
+                'bg-[#f3e8ff]', 'bg-[#fef9c3]', 'bg-[#cffafe]'
               ];
               const colorIdx = subjects.findIndex(s => s.id === schedule.subjectId) % colorClasses.length;
 
               return (
                 <div 
                   key={schedule.id} 
-                  className={`border-r border-b border-black last:border-r-0 p-3 flex flex-col items-center justify-center text-center space-y-1 z-10 ${colorClasses[colorIdx]}`}
+                  className={`border-r border-b border-[#000000] text-[#000000] last:border-r-0 p-3 flex flex-col items-center justify-center text-center space-y-1 z-10 ${colorClasses[colorIdx]}`}
                   style={{ 
                     gridRow: `${startIdx + 1} / span ${rowSpan}`, 
                     gridColumn: schedule.day + 2 
                   }}
                 >
-                  <p className="font-bold text-xs uppercase leading-tight">
+                  <p className="font-bold text-xs uppercase leading-tight text-[#000000]">
                     {subjects.find(s => s.id === schedule.subjectId)?.name}
                   </p>
-                  <p className="text-[10px] font-medium italic">
+                  <p className="text-[10px] font-medium italic text-[#000000]">
                     {teachers.find(t => t.id === schedule.teacherId)?.name}
                   </p>
-                  <p className="text-[8px] font-bold opacity-60">
+                  <p className="text-[8px] font-bold opacity-60 text-[#000000]">
                     Salle {rooms.find(r => r.id === schedule.roomId)?.name}
                   </p>
                 </div>
@@ -261,8 +268,8 @@ const OfficialView: React.FC<{
       {/* Footer */}
       <div className="mt-16 flex justify-end pr-20">
         <div className="text-center">
-          <p className="text-sm font-bold text-text-dark underline decoration-dotted mb-2">Signature Direction</p>
-          <p className="text-sm font-medium text-text-muted">{new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+          <p className="text-sm font-bold text-[#000000] underline decoration-dotted mb-2">Signature Direction</p>
+          <p className="text-sm font-medium text-[#6B7280]">{new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
         </div>
       </div>
     </div>
@@ -312,6 +319,39 @@ export const Schedules: React.FC = () => {
   const [showOfficialView, setShowOfficialView] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const printRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadPDF = async () => {
+    if (!printRef.current) {
+      alert('Veuillez passer en "Vue officielle" pour télécharger le PDF.');
+      return;
+    }
+    try {
+      setIsDownloading(true);
+      const canvas = await html2canvas(printRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      });
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+      pdf.save(`emploi-du-temps-${selectedClass?.mention || ''}-${selectedClass?.name || ''}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Une erreur est survenue lors de la génération du PDF');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const [newAssignment, setNewAssignment] = useState<Partial<Schedule>>({
     classId: selectedClassId,
@@ -423,11 +463,12 @@ export const Schedules: React.FC = () => {
             </button>
           )}
           <button 
-            onClick={() => window.print()}
-            className="bg-bg-light border border-border text-text-dark px-3 py-2 rounded-xl text-xs font-bold transition-all hover:bg-border/50 flex items-center gap-2"
+            onClick={handleDownloadPDF}
+            disabled={isDownloading || !showOfficialView}
+            className="bg-bg-light border border-border text-text-dark px-3 py-2 rounded-xl text-xs font-bold transition-all hover:bg-border/50 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download size={16} />
-            PDF
+            {isDownloading ? 'Génération...' : 'PDF'}
           </button>
           {isAdmin && (
             <button 
@@ -454,7 +495,7 @@ export const Schedules: React.FC = () => {
       {!showOfficialView ? (
         <>
           {/* Class Selector & Filters */}
-          <div className="bg-white p-4 rounded-3xl border border-border shadow-sm flex flex-wrap items-center gap-4">
+          <div className="bg-white p-4 rounded-2xl border border-border shadow-sm flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2 bg-bg-light p-2 rounded-2xl border border-border">
               {(isAdmin ? classes : teacherClasses).map(cls => (
                 <button
@@ -499,20 +540,34 @@ export const Schedules: React.FC = () => {
                 {/* Grid Body */}
                 <div className="grid grid-cols-[100px_repeat(6,1fr)] bg-white relative">
                   {/* Time Labels Column */}
-                  {TIME_SLOTS.map((slot, sIdx) => (
+                  {TIME_SLOTS.map((slot, sIdx) => {
+                    const is12To13 = slot === '12:00 - 13:00';
+                    const is13To14 = slot === '13:00 - 14:00';
+                    return (
                     <div 
                       key={`time-${sIdx}`}
-                      className="p-3 flex flex-col items-center justify-center border-b border-r border-border bg-bg-light/30 min-h-[80px]"
+                      className={`p-3 flex flex-col items-center justify-center ${!is12To13 ? 'border-b' : ''} border-r border-border min-h-[80px] ${is12To13 || is13To14 ? 'bg-bg-light/80' : 'bg-bg-light/30'}`}
                       style={{ gridRow: sIdx + 1, gridColumn: 1 }}
                     >
-                      <span className="text-[10px] font-bold text-text-dark text-center leading-none mb-1">{slot.split(' - ')[0]}</span>
-                      <span className="text-[9px] font-medium text-text-muted text-center italic">{slot.split(' - ')[1]}</span>
+                      {is12To13 ? (
+                         <>
+                           <span className="text-[10px] font-bold text-text-dark text-center leading-none mb-1">12:00</span>
+                           <span className="text-[9px] font-medium text-text-muted text-center italic">14:00</span>
+                         </>
+                      ) : is13To14 ? null : (
+                         <>
+                           <span className="text-[10px] font-bold text-text-dark text-center leading-none mb-1">{slot.split(' - ')[0]}</span>
+                           <span className="text-[9px] font-medium text-text-muted text-center italic">{slot.split(' - ')[1]}</span>
+                         </>
+                      )}
                     </div>
-                  ))}
+                  )})}
 
                   {/* Empty Background Droppable Cells */}
-                  {TIME_SLOTS.map((slot, sIdx) => 
-                    DAYS.map((_, dIdx) => {
+                  {TIME_SLOTS.map((slot, sIdx) => {
+                    const is12To13 = slot === '12:00 - 13:00';
+                    const is13To14 = slot === '13:00 - 14:00';
+                    return DAYS.map((_, dIdx) => {
                       const schedule = schedules.find(s => 
                         s.classId === selectedClassId && 
                         s.day === dIdx && 
@@ -524,7 +579,7 @@ export const Schedules: React.FC = () => {
                         <div 
                           key={`bg-${sIdx}-${dIdx}`}
                           style={{ gridRow: sIdx + 1, gridColumn: dIdx + 2 }}
-                          className="border-b border-l border-border relative group"
+                          className={`${!is12To13 ? 'border-b' : ''} border-l border-border relative group ${is12To13 || is13To14 ? 'bg-bg-light/50' : ''}`}
                         >
                           <DroppableCell 
                             day={dIdx} 
@@ -551,8 +606,8 @@ export const Schedules: React.FC = () => {
                           </DroppableCell>
                         </div>
                       );
-                    })
-                  )}
+                    });
+                  })}
 
                   {/* Actual Schedule Items */}
                   {schedules
@@ -622,6 +677,7 @@ export const Schedules: React.FC = () => {
             rooms={rooms}
             teachers={teachers}
             subjects={subjects}
+            printRef={printRef}
           />
         )
       )}
@@ -641,7 +697,7 @@ export const Schedules: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white rounded-[32px] p-8 shadow-2xl relative w-full max-w-2xl overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-[12px] p-8 shadow-2xl relative w-full max-w-2xl overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-display font-bold text-text-dark">
@@ -778,7 +834,7 @@ export const Schedules: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white rounded-[32px] p-8 shadow-2xl relative w-full max-w-md"
+              className="bg-white rounded-[12px] p-8 shadow-2xl relative w-full max-w-md"
             >
               <div className="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <CalendarIcon size={32} />
@@ -824,7 +880,7 @@ export const Schedules: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white rounded-[32px] p-8 shadow-2xl relative w-full max-w-md"
+              className="bg-white rounded-[12px] p-8 shadow-2xl relative w-full max-w-md"
             >
               <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <X size={32} />
