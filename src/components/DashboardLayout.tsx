@@ -19,6 +19,7 @@ import {
   Filter
 } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
+import { useData } from '../lib/DataContext';
 import { UserRole, Level } from '../data';
 
 interface SidebarItem {
@@ -35,10 +36,10 @@ const sidebarItems: SidebarItem[] = [
   { name: 'Classes', path: '/admin/classes', icon: School, roles: [UserRole.ADMIN] },
   { name: 'Matières', path: '/admin/subjects', icon: BookOpen, roles: [UserRole.ADMIN] },
   { name: 'Emplois du temps', path: '/admin/schedules', icon: Calendar, roles: [UserRole.ADMIN, UserRole.TEACHER] },
-  { name: 'Recherche salle', path: '/admin/search-room', icon: Search, roles: [UserRole.ADMIN] },
-  { name: 'Notifications', path: '/admin/notifications', icon: Bell, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Paramètres', path: '/admin/settings', icon: Settings, roles: [UserRole.ADMIN, UserRole.TEACHER] },
 ];
+
+import logo from '../assets/logo.png';
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, logout } = useAuth();
@@ -46,6 +47,10 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [level, setLevel] = useState<Level>(Level.LICENCE);
+
+  const { notifications, markAllAsRead, clearNotification } = useData();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   if (!user) {
     navigate('/login');
@@ -60,21 +65,15 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       <motion.aside 
         initial={false}
         animate={{ width: isSidebarOpen ? 280 : 80 }}
-        className="bg-secondary text-white flex flex-col fixed h-full z-50 transition-all duration-300 shadow-xl"
+        transition={{ type: 'spring', damping: 20, stiffness: 150 }}
+        className="bg-secondary text-white flex flex-col fixed h-full z-50 shadow-xl"
       >
-        <div className="p-6 flex items-center gap-4">
-          <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center font-bold text-xl">
-            E
-          </div>
-          {isSidebarOpen && (
-            <motion.span 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="font-display font-bold text-xl tracking-wider"
-            >
-              EMIT
-            </motion.span>
-          )}
+        <div className={`p-6 flex items-center transition-all duration-300 ${isSidebarOpen ? 'justify-start overflow-hidden' : 'justify-center'}`}>
+          <img 
+            src={logo} 
+            alt="EMIT" 
+            className={`w-10 h-10 object-contain brightness-0 invert transition-transform duration-300 ${isSidebarOpen ? 'scale-110' : 'scale-100'}`} 
+          />
         </div>
 
         <nav className="flex-grow px-4 space-y-2 mt-4">
@@ -117,7 +116,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       </motion.aside>
 
       {/* Main Content */}
-      <main className={`flex-grow transition-all duration-300 ${isSidebarOpen ? 'ml-[280px]' : 'ml-[80px]'}`}>
+      <motion.main 
+        initial={false}
+        animate={{ marginLeft: isSidebarOpen ? 280 : 80 }}
+        transition={{ type: 'spring', damping: 20, stiffness: 150 }}
+        className="flex-grow min-h-screen"
+      >
         {/* Top Header */}
         <header className="h-20 bg-white border-b border-border px-8 flex items-center justify-between sticky top-0 z-40 bg-white/80 backdrop-blur-md">
           <div className="flex items-center gap-6">
@@ -148,10 +152,83 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
           </div>
 
           <div className="flex items-center gap-6">
-            <button className="relative p-2 text-text-muted hover:text-primary transition-colors">
-              <Bell size={20} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => {
+                  setShowNotifications(!showNotifications);
+                  if (!showNotifications) markAllAsRead();
+                }}
+                className="relative p-2 text-text-muted hover:text-[#001D4A] transition-colors"
+              >
+                <Bell size={20} />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-error rounded-full border-2 border-white flex items-center justify-center text-[8px] font-bold text-white">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {showNotifications && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40" 
+                      onClick={() => setShowNotifications(false)}
+                    />
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute right-0 mt-3 w-80 bg-white border border-border shadow-2xl rounded-3xl py-4 z-50 max-h-[400px] flex flex-col"
+                    >
+                      <div className="px-6 mb-4 flex items-center justify-between">
+                        <h4 className="font-bold text-text-dark">Notifications</h4>
+                        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{notifications.length} au total</span>
+                      </div>
+                      
+                      <div className="flex-grow overflow-y-auto px-2 space-y-1">
+                        {notifications.length === 0 ? (
+                          <div className="py-8 text-center text-text-muted">
+                            <Bell size={32} className="mx-auto mb-2 opacity-20" />
+                            <p className="text-xs font-medium">Aucune notification</p>
+                          </div>
+                        ) : (
+                          notifications.map((n) => (
+                            <div 
+                              key={n.id}
+                              className={`p-3 rounded-2xl transition-colors relative group ${
+                                n.read ? 'hover:bg-bg-light' : 'bg-[#001D4A]/5 hover:bg-[#001D4A]/10'
+                              }`}
+                            >
+                              <div className="flex gap-3">
+                                <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${
+                                  n.type === 'error' ? 'bg-error' : 
+                                  n.type === 'warning' ? 'bg-orange-500' : 'bg-emerald-500'
+                                }`} />
+                                <div className="space-y-0.5">
+                                  <p className="text-xs font-bold text-text-dark leading-tight">{n.title}</p>
+                                  <p className="text-[10px] text-text-muted leading-relaxed line-clamp-2">{n.message}</p>
+                                  <p className="text-[9px] font-medium text-text-muted mt-1">{n.time}</p>
+                                </div>
+                              </div>
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  clearNotification(n.id);
+                                }}
+                                className="absolute top-2 right-2 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white rounded-lg text-text-muted hover:text-error"
+                              >
+                                <X size={12} />
+                              </button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
 
             <div className="flex items-center gap-3 pl-6 border-l border-border">
               <div className="text-right hidden sm:block">
@@ -172,7 +249,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         <div className="p-8 pb-12">
           {children}
         </div>
-      </main>
+      </motion.main>
     </div>
   );
 };
